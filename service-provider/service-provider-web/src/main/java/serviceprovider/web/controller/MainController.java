@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController extends BaseController {
 
 	/**
-	 * Showing homepage.
+	 * Showing homepage and this page is being forwarded by index.jsp.
 	 */
 	@RequestMapping(value = "/homepage")
 	public Object showMainPage() {
