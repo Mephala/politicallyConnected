@@ -16,6 +16,9 @@ public class MainController extends BaseController {
 		return finalizeControllerReturn(modelAndView);
 	}
 
+	/**
+	 * Shows authentication page.
+	 */
 	@RequestMapping(value = "/authenticate")
 	public Object showAuthenticationPage() {
 		ModelAndView modelAndView = createModelAndView(Model.MAIN_AUTHENTICATION_PAGE);
