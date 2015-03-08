@@ -7,6 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController extends BaseController {
 
+	/**
+	 * Showing homepage.
+	 */
 	@RequestMapping(value = "/homepage")
 	public Object showMainPage() {
 		ModelAndView modelAndView = createModelAndView(Model.HOMEPAGE);
