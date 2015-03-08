@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JMockit Coverage Report - FileEngine.java</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  <link rel='stylesheet' type='text/css' href='../../coverage.css'/>
+  <link rel='shortcut icon' type='image/png' href='../../logo.png'/>
+  <script type='text/javascript' src='../../coverage.js'></script>
+  <script type='text/javascript' src='../../prettify.js'></script>
+</head>
+<body onload='prettyPrint()'>
+  <table cellpadding='0' cellspacing='1'>
+    <caption>fileSharer\src\main\java\fileSharer\engine\FileEngine.java</caption>
+    <tr>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package fileSharer.engine;</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'></td><td>&nbsp;</td>
+      <td><pre class='imports prettyprint' onclick='showHideLines(this)'><div>import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+
+import fileSharer.ApplicationConstants;
+import fileSharer.DynamicTransferFile;
+import fileSharer.FileChunk;
+</div><span>import ...</span></pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>21</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>public class FileEngine {</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>23</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	private List&lt;String> <span class='instance covered' title='Reads: 30 Writes: 7'>fileList</span>;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	private final String SOURCE_FOLDER;</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>26</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l26s0'>	public FileEngine(String sourceFolder) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>27</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l27s0'>		fileList = new ArrayList&lt;String>();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>28</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l28s0'>		this.SOURCE_FOLDER = sourceFolder;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>29</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l29s0'>		generateFileList(new File(SOURCE_FOLDER));</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>30</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l30s0'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'></td><td>&nbsp;</td>
+      <td class='comment' onclick='showHideLines(this)'><div>	/**
+	 * Zip it
+	 * 
+	 * @param zipFile
+	 *            output ZIP file location
+	 */</div><span>	/*...*/</span></td>
+    </tr>
+    <tr>
+      <td class='line'>38</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public void zipIt(String zipFile) {</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>40</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l40s0'>		byte[] buffer = new byte[1024];</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>42</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		try {</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>44</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l44s0'>			FileOutputStream fos = new FileOutputStream(zipFile);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>45</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l45s0'>			ZipOutputStream zos = new ZipOutputStream(fos);</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>47</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l47s0'>			System.out.println("Output to Zip : " + zipFile);</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>49</td><td class='count'>37</td>
+      <td><pre class='prettyprint covered' id='l49s0'>			for (String file : this.fileList) {</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>51</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l51s0'>				System.out.println("File Added : " + file);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>52</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l52s0'>				ZipEntry ze = new ZipEntry(file);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>53</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l53s0'>				zos.putNextEntry(ze);</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>55</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l55s0'>				FileInputStream in = new FileInputStream(SOURCE_FOLDER + File.separator + file);</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>57</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>				int len;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>58</td><td class='count'>238</td>
+      <td><pre class='prettyprint covered' id='l58s0'>				while ((len = in.read(buffer)) > 0) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>59</td><td class='count'>192</td>
+      <td><pre class='prettyprint covered' id='l59s0'>					zos.write(buffer, 0, len);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>60</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>				}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>62</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l62s0'>				in.close();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>63</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>65</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l65s0'>			zos.closeEntry();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>66</td><td>&nbsp;</td>
+      <td><pre class='comment'>			// remember close it</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>67</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l67s0'>			zos.close();</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>69</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l69s0'>			System.out.println("Done");</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>70</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l70s0'>		} catch (IOException ex) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>71</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l71s0'>			ex.printStackTrace();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>72</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>74</td><td class='count'>7</td>
+      <td><pre class='prettyprint covered' id='l74s0'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'></td><td>&nbsp;</td>
+      <td class='comment' onclick='showHideLines(this)'><div>	/**
+	 * Traverse a directory and get all files, and add the file into fileList
+	 * 
+	 * @param node
+	 *            file or directory
+	 */</div><span>	/*...*/</span></td>
+    </tr>
+    <tr>
+      <td class='line'>82</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public void generateFileList(File node) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>83</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// add file only</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>78</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#7f8000' onclick='hidePath()'>Path coverage: 2/4</span>
+        <span class='uncovered' onclick="showPath(this,'l84s0 l88s0 l94s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l84s0 l88s0 l89s0 l90s0 l94s0')">B: 32</span>
+        <span class='covered' onclick="showPath(this,'l84s0 l85s0 l88s0 l94s0')">C: 46</span>
+        <span class='uncovered' onclick="showPath(this,'l84s0 l85s0 l88s0 l89s0 l90s0 l94s0')">D: 0</span>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>84</td><td class='count'>78</td>
+      <td><pre class='prettyprint jmp'>		<span id='l84s0' title='Executions: 78' class='covered'>if (node.isFile()) {</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>85</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l85s0'>			fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>86</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>88</td><td class='count'>78</td>
+      <td><pre class='prettyprint jmp'>		<span id='l88s0' title='Executions: 78' class='covered'>if (node.isDirectory()) {</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>89</td><td class='count'>55</td>
+      <td><pre class='prettyprint covered' id='l89s0'>			String[] subNote = node.list();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>90</td><td class='count'>126</td>
+      <td><pre class='prettyprint covered' id='l90s0'>			for (String filename : subNote) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>91</td><td class='count'>71</td>
+      <td><pre class='prettyprint covered' id='l91s0'>				generateFileList(new File(node, filename));</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>92</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>93</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>94</td><td class='count'>78</td>
+      <td><pre class='prettyprint covered' id='l94s0'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'></td><td>&nbsp;</td>
+      <td class='comment' onclick='showHideLines(this)'><div>	/**
+	 * Format the file path for zip
+	 * 
+	 * @param file
+	 *            file path
+	 * @return Formatted file path
+	 */</div><span>	/*...*/</span></td>
+    </tr>
+    <tr>
+      <td class='line'>103</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	private String generateZipEntry(String file) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>104</td><td class='count'>23</td>
+      <td><pre class='prettyprint covered' id='l104s0'>		return file.substring(SOURCE_FOLDER.length() + 1, file.length());</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>105</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>107</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public DynamicTransferFile createDynamicTransferFile(File zipFile) {</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>6</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#7f8000' onclick='hidePath()'>Path coverage: 1/2</span>
+        <span class='uncovered' onclick="showPath(this,'l108s0 l115s0 l117s0 l118s0')">A: 0</span>
+        <span class='covered' onclick="showPath(this,'l108s0 l115s0 l116s0 l117s0 l118s0')">B: 6</span>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>108</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l108s0'>		BigDecimal fileSize = new BigDecimal(zipFile.length());</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>109</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l109s0'>		BigDecimal chunkSize = new BigDecimal((4 * ApplicationConstants.TOTAL_INTEGER_PER_CHUNK));</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>110</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l110s0'>		BigDecimal chunkCount = fileSize.divide(chunkSize, 10, BigDecimal.ROUND_HALF_UP);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>111</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l111s0'>		int integerChunkCount = chunkCount.intValue();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>112</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l112s0'>		BigDecimal integerEquivalanceBigDecimal = new BigDecimal(integerChunkCount);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>113</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l113s0'>		integerEquivalanceBigDecimal = integerEquivalanceBigDecimal.setScale(10);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>114</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l114s0'>		int totalCount = integerEquivalanceBigDecimal.intValue();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>115</td><td class='count'>6</td>
+      <td><pre class='prettyprint jmp'>		<span id='l115s0' title='Executions: 6' class='covered'>if (!integerEquivalanceBigDecimal.equals(chunkCount))</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>116</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l116s0'>			totalCount++;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>117</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l117s0'>		DynamicTransferFile dtf = new DynamicTransferFile(totalCount, zipFile);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>118</td><td class='count'>6</td>
+      <td><pre class='prettyprint covered' id='l118s0'>		return dtf;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>119</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>121</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public void prepareDynamicTransferFileToTransfer(DynamicTransferFile dynamicTransferFile) throws IOException {</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>4</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#bf4000' onclick='hidePath()'>Path coverage: 1/4</span>
+        <span class='uncovered' onclick="showPath(this,'l122s0 l130s0 l134s0 l141s0 l145s0')">A: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l122s0 l130s0 l134s0 l141s0 l142s0 l145s0')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l122s0 l130s0 l131s0 l134s0 l141s0 l145s0')">C: 0</span>
+        <span class='covered' onclick="showPath(this,'l122s0 l130s0 l131s0 l134s0 l141s0 l142s0 l145s0')">D: 4</span>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>122</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l122s0'>		FileInputStream in = null;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>123</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		try {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>124</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l124s0'>			File zipFile = dynamicTransferFile.getReferringZipFile();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>125</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l125s0'>			in = new FileInputStream(zipFile);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>126</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			int c;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>127</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l127s0'>			int integerSizeLimit = ApplicationConstants.TOTAL_INTEGER_PER_CHUNK;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>128</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l128s0'>			int currentDataAsInteger = 0;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>129</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l129s0'>			FileChunk fc = dynamicTransferFile.getCurrentChunk();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>130</td><td class='count'>4</td>
+      <td><pre class='prettyprint jmp'>			<span id='l130s0' title='Executions: 4' class='covered'>if (fc == null)</span> <span id='l130s1' title='Executions: 4' class='covered'>{</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>131</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l131s0'>				fc = new FileChunk();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>132</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l132s0'>				dynamicTransferFile.setCurrentChunk(fc);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>133</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>134</td><td class='count'>52789</td>
+      <td><pre class='prettyprint covered' id='l134s0'>			while ((c = in.read()) != -1) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>135</td><td class='count'>52781</td>
+      <td><pre class='prettyprint jmp'>				<span id='l135s0' title='Executions: 52781' class='covered'>if (currentDataAsInteger >= integerSizeLimit)</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>136</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l136s0'>					break;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>137</td><td class='count'>52781</td>
+      <td><pre class='prettyprint covered' id='l137s0'>				fc.write(currentDataAsInteger, c);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>138</td><td class='count'>52781</td>
+      <td><pre class='prettyprint covered' id='l138s0'>				currentDataAsInteger++;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>139</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>140</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l140s0'>		} finally {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>141</td><td class='count'>4</td>
+      <td><pre class='prettyprint jmp'>			<span id='l141s0' title='Executions: 4' class='covered'>if (in != null)</span> <span id='l141s1' title='Executions: 0' class='uncovered'>{</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>142</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l142s0'>				in.close();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>143</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>144</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l144s0'>		}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>145</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l145s0'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>147</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public File createFileFromDynamicTransferFile(DynamicTransferFile dynamicTransferFile) throws IOException {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>148</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// FileOutputStream out = null;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>149</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// File createdFile = null;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>150</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// try {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>151</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// createdFile = new File(UUID.randomUUID().toString() + ".zip");</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>152</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// createdFile.createNewFile();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>153</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// out = new FileOutputStream(createdFile);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>154</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// int totalChunk = dynamicTransferFile.getTotalChunkValue();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>155</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// int currentChunk = dynamicTransferFile.getCurrentChunkValue();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>156</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// while (currentChunk &lt;= totalChunk) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>157</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// transferCurrentChunk(dynamicTransferFile);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>158</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// dynamicTransferFile.setCurrentChunkValue(currentChunk + 1);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>159</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// currentChunk++;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>160</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// FileChunk fc = dynamicTransferFile.getCurrentChunk();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>161</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// int[] normalizedArray = fc.getNormalizedData();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>162</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// for (int i = 0; i &lt; normalizedArray.length; i++) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>163</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// out.write(normalizedArray[i]);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>164</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// }</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>165</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// }</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>166</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// } finally {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>167</td><td>&nbsp;</td>
+      <td><pre class='comment'>		//</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>168</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// if (out != null) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>169</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// out.close();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>170</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// }</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>171</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// }</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>172</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// return createdFile;</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>0</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#ff0000' onclick='hidePath()'>Path coverage: 0/2</span>
+        <span class='uncovered' onclick="showPath(this,'l173s0 l191s0 l195s0')">A: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l173s0 l191s0 l192s0 l195s0')">B: 0</span>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>173</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l173s0'>		FileOutputStream out = null;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>174</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l174s0'>		File createdFile = null;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>175</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		try {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>176</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l176s0'>			createdFile = new File(UUID.randomUUID().toString() + ".zip");</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>177</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l177s0'>			createdFile.createNewFile();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>178</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l178s0'>			out = new FileOutputStream(createdFile);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>179</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l179s0'>			byte[] readBytez = FileUtils.readFileToByteArray(dynamicTransferFile.getReferringZipFile());</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>180</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l180s0'>			byte[] encodedBytes = Base64.encodeBase64(readBytez);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>181</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l181s0'>			String readData = new String(encodedBytes, "UTF-8");</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>182</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l182s0'>			byte[] readDataBytes = readData.getBytes();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>183</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l183s0'>			byte[] decodedReadBytes = Base64.decodeBase64(readDataBytes);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>184</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l184s0'>			FileUtils.writeByteArrayToFile(createdFile, decodedReadBytes);</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>185</td><td>&nbsp;</td>
+      <td><pre class='comment'>			// FileUtils.writeStringToFile(createdFile, readData, "UTF-8");</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>186</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l186s0'>		} catch (Exception e) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>187</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l187s0'>			System.err.println("Error during file recreation. Error:" + e.getMessage());</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>188</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l188s0'>			e.printStackTrace();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>189</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l189s0'>		} finally {</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>191</td><td class='count'>2</td>
+      <td><pre class='prettyprint jmp'>			<span id='l191s0' title='Executions: 2' class='covered'>if (out != null)</span> <span id='l191s1' title='Executions: 0' class='uncovered'>{</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>192</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l192s0'>				out.close();</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>193</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>194</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l194s0'>		}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>195</td><td class='count'>2</td>
+      <td><pre class='prettyprint covered' id='l195s0'>		return createdFile;</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>197</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>199</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	private void transferCurrentChunk(DynamicTransferFile dynamicTransferFile) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>200</td><td>&nbsp;</td>
+      <td><pre class='comment'>		// FIXME implement later on.</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>202</td><td class='count'>0</td>
+      <td><pre class='prettyprint uncovered' id='l202s0'>	}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>203</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
+    </tr>
+  </table>
+</body>
+</html>

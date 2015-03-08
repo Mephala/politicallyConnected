@@ -1,0 +1,3 @@
+<property name="connection.url">jdbc:mysql://localhost:3306/kelepirp_service?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
+        <property name="connection.username">kelepirp_root</property>
+        <property name="connection.password">32167bbbbbbbbb</property>
