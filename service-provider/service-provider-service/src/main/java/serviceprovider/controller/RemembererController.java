@@ -26,6 +26,7 @@ import service.provider.common.response.GetAllRememberersResponseDto;
 import service.provider.common.response.SaveRemembererResponseDto;
 import serviceprovider.manager.RemembererManager;
 import serviceprovider.model.Rememberer;
+import serviceprovider.service.address.AddressService;
 
 @Controller
 public class RemembererController extends AbstractServiceController {
@@ -38,6 +39,8 @@ public class RemembererController extends AbstractServiceController {
 	@RequestMapping(value = "/saveRememberer.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Object saveRememberer(HttpServletRequest request, HttpServletResponse response, @RequestBody final SaveRemembererRequestDto saveRemembererRequest) {
+		AddressService as = AddressService.getInstance();
+		System.out.println(as != null);
 		logger.info("Save rememberer request is received." + saveRemembererRequest);
 		SaveRemembererResponseDto responseDto = new SaveRemembererResponseDto();
 		try {

@@ -63,20 +63,20 @@ import service.provider.common.response.SaveUserResponseDto;
 public class TestClient {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, FileNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
-		// ServiceClient.initialize("http://localhost:8080/");
+		ServiceClient.initialize("http://localhost:8080/");
 		// testUserSaveAndLogin();
 		// ProviderTests();
 		// categoryTest();
 		// categoryChildhoodTest();
 		// utf8Test();
-		// testRememberer();
+		testRememberer();
 		// testBasicCategoryProcesses();
 		// testSchedulerAdd();
 		// testGettingAllSchedulers();
 		// deleteScheduler();
 		// testGettingAllAuthorsDto();
 		// testGettingConfigurations();
-		cryptoTest();
+		// cryptoTest();
 	}
 
 	private static void cryptoTest() throws NoSuchAlgorithmException, IOException, FileNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
@@ -98,7 +98,7 @@ public class TestClient {
 			key = generator.generateKey();
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("SecretKey.ser"));
 			out.writeObject(key);
-			out.close();	
+			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
