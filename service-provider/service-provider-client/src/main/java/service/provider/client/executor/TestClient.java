@@ -26,6 +26,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import service.provider.common.core.RequestApplication;
 import service.provider.common.dto.CategoryDto;
+import service.provider.common.dto.CityDto;
 import service.provider.common.dto.ConfigurationDto;
 import service.provider.common.dto.ProviderDto;
 import service.provider.common.dto.RemembererDto;
@@ -51,6 +52,7 @@ import service.provider.common.response.DeleteRemembererResponseDto;
 import service.provider.common.response.DeleteSchedulerResponseDto;
 import service.provider.common.response.GetAllAuthorsResponseDto;
 import service.provider.common.response.GetAllCategoryIdsResponseDto;
+import service.provider.common.response.GetAllCitiesResponseDto;
 import service.provider.common.response.GetAllProvidersResponseDto;
 import service.provider.common.response.GetAllRememberersResponseDto;
 import service.provider.common.response.GetAllSchedulersResponseDto;
@@ -69,7 +71,7 @@ public class TestClient {
 		// categoryTest();
 		// categoryChildhoodTest();
 		// utf8Test();
-		testRememberer();
+		// testRememberer();
 		// testBasicCategoryProcesses();
 		// testSchedulerAdd();
 		// testGettingAllSchedulers();
@@ -77,6 +79,16 @@ public class TestClient {
 		// testGettingAllAuthorsDto();
 		// testGettingConfigurations();
 		// cryptoTest();
+		citiesTest();
+	}
+
+	private static void citiesTest() {
+		GetAllCitiesResponseDto response = ServiceClient.getAllCities(RequestDtoFactory.createGetAllCitiesRequestDto(RequestApplication.WEB));
+		List<CityDto> cities = response.getCityList();
+		for (CityDto cityDto : cities) {
+			System.out.println(cityDto.getName());
+		}
+
 	}
 
 	private static void cryptoTest() throws NoSuchAlgorithmException, IOException, FileNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {

@@ -1,6 +1,8 @@
 package serviceprovider.service.address;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+
+import service.provider.common.dto.IlceDto;
+import service.provider.common.dto.SemtDto;
 
 @Entity
 public class Ilce implements Cloneable {
@@ -101,6 +106,22 @@ public class Ilce implements Cloneable {
 
 	protected void setId(Long id) {
 		this.id = id;
+	}
+
+	public IlceDto convertToDto() {
+		IlceDto ilceDto = new IlceDto();
+		ilceDto.setId(id);
+		ilceDto.setName(name);
+		List<SemtDto> semtDtoList = new ArrayList<>();
+		for (Semt semt : semtSet) {
+			semtDtoList.add(semt.convertToDto());
+		}
+		ilceDto.setSemtList(semtDtoList);
+		return ilceDto;
+	}
+
+	protected Ilce() {
+
 	}
 
 }

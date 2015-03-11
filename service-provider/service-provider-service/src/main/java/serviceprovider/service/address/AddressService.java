@@ -20,6 +20,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.util.CollectionUtils;
 
+import service.provider.common.dto.CityDto;
 import serviceprovider.util.HibernateUtil;
 
 public class AddressService {
@@ -176,6 +177,17 @@ public class AddressService {
 		if (instance == null)
 			instance = new AddressService();
 		return instance;
+	}
+
+	public List<CityDto> getTurkishCitiesAsDto() {
+		logger.info("Converting city list to Dto for transfer.");
+		List<CityDto> cityDtoList = new ArrayList<>();
+		List<City> cities = getTurkishCitiesList();
+		for (City city : cities) {
+			cityDtoList.add(city.convertToDto());
+		}
+		logger.info("CityDto list is ready to be returned.");
+		return cityDtoList;
 	}
 
 }

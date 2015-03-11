@@ -1,6 +1,8 @@
 package serviceprovider.service.address;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,10 +13,17 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import service.provider.common.dto.CityDto;
+import service.provider.common.dto.IlceDto;
+
 @Entity
 public class City implements Cloneable {
 	@Transient
 	private Set<String> savedIlceNames;
+
+	protected City() {
+
+	}
 
 	@Id
 	@GeneratedValue
@@ -106,6 +115,18 @@ public class City implements Cloneable {
 
 	protected void setId(Long id) {
 		this.id = id;
+	}
+
+	public CityDto convertToDto() {
+		CityDto cityDto = new CityDto();
+		cityDto.setId(id);
+		cityDto.setName(name);
+		List<IlceDto> ilceDtoList = new ArrayList<>();
+		for (Ilce ilce : ilceSet) {
+			ilceDtoList.add(ilce.convertToDto());
+		}
+		cityDto.setIlceList(ilceDtoList);
+		return cityDto;
 	}
 
 }

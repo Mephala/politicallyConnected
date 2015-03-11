@@ -4,6 +4,12 @@ import service.provider.common.core.RequestApplication;
 
 public class RequestDtoFactory {
 
+	public static GetAllCitiesRequestDto createGetAllCitiesRequestDto(RequestApplication application) {
+		GetAllCitiesRequestDto request = new GetAllCitiesRequestDto(RequestDtoConstants.GET_ALL_CITIES_REQUEST_URI);
+		request.setRequestApp(application);
+		return request;
+	}
+
 	public static SaveConfigurationRequestDto createSaveConfigurationRequestDto(RequestApplication application) {
 		SaveConfigurationRequestDto request = new SaveConfigurationRequestDto(RequestDtoConstants.SAVE_CONFIGURATION_REQUEST_URI);
 		request.setRequestApp(application);

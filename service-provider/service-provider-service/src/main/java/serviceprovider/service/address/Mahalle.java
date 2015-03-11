@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import service.provider.common.dto.MahalleDto;
+
 @Entity
 public class Mahalle implements Cloneable {
 
@@ -77,6 +79,17 @@ public class Mahalle implements Cloneable {
 
 	protected void setId(Long id) {
 		this.id = id;
+	}
+
+	public MahalleDto convertToDto() {
+		MahalleDto mahalleDto = new MahalleDto();
+		mahalleDto.setId(id);
+		mahalleDto.setName(name);
+		return mahalleDto;
+	}
+
+	protected Mahalle() {
+
 	}
 
 }

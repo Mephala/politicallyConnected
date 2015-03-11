@@ -18,6 +18,7 @@ import service.provider.common.dto.Validatable;
 import service.provider.common.request.DeleteRemembererRequestDto;
 import service.provider.common.request.DeleteSchedulerRequestDto;
 import service.provider.common.request.GetAllCategoryIdsRequestDto;
+import service.provider.common.request.GetAllCitiesRequestDto;
 import service.provider.common.request.GetAllConfigurationRequestDto;
 import service.provider.common.request.GetAllProvidersRequestDto;
 import service.provider.common.request.GetAllRememberersRequestDto;
@@ -36,6 +37,7 @@ import service.provider.common.response.DeleteRemembererResponseDto;
 import service.provider.common.response.DeleteSchedulerResponseDto;
 import service.provider.common.response.GetAllAuthorsResponseDto;
 import service.provider.common.response.GetAllCategoryIdsResponseDto;
+import service.provider.common.response.GetAllCitiesResponseDto;
 import service.provider.common.response.GetAllConfigurationResponseDto;
 import service.provider.common.response.GetAllProvidersResponseDto;
 import service.provider.common.response.GetAllRememberersResponseDto;
@@ -74,6 +76,10 @@ public class ServiceClient {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	public static GetAllCitiesResponseDto getAllCities(GetAllCitiesRequestDto getAllCitiesRequest) {
+		return process(getAllCitiesRequest, GetAllCitiesResponseDto.class, GetAllCitiesRequestDto.class);
 	}
 
 	public static SaveConfigurationResponseDto saveConfiguration(SaveConfigurationRequestDto saveConfigurationRequestDto) {

@@ -17,4 +17,5 @@ class RequestDtoConstants {
 	protected static final String GET_AUTHORS_URI = "/getAllAuthors.do";
 	protected static final String GET_ALL_CONFIGURATIONS_REQUEST_URI = "/getAllConfigurations.do";
 	protected static final String SAVE_CONFIGURATION_REQUEST_URI = "/saveConfiguration.do";
+	protected static final String GET_ALL_CITIES_REQUEST_URI = "/getAllCities.do";
 }

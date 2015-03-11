@@ -1,6 +1,8 @@
 package serviceprovider.service.address;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+
+import service.provider.common.dto.MahalleDto;
+import service.provider.common.dto.SemtDto;
 
 @Entity
 public class Semt implements Cloneable {
@@ -106,6 +111,22 @@ public class Semt implements Cloneable {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public SemtDto convertToDto() {
+		SemtDto semtDto = new SemtDto();
+		semtDto.setId(id);
+		semtDto.setName(name);
+		List<MahalleDto> mahalleDtoList = new ArrayList<>();
+		for (Mahalle mahalle : mahalleSet) {
+			mahalleDtoList.add(mahalle.convertToDto());
+		}
+		semtDto.setMahalleList(mahalleDtoList);
+		return semtDto;
+	}
+
+	protected Semt() {
+
 	}
 
 }
