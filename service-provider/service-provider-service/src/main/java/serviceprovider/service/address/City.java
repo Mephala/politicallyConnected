@@ -9,10 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 @Entity
-class City {
-
+public class City implements Cloneable {
+	@Transient
 	private Set<String> savedIlceNames;
 
 	@Id
@@ -23,9 +24,9 @@ class City {
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	Set<Ilce> ilceSet;
+	private Set<Ilce> ilceSet;
 
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -33,7 +34,7 @@ class City {
 		this.name = name;
 	}
 
-	protected Long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -91,6 +92,20 @@ class City {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	@Override
+	public City clone() {
+		City clonedCity = new City(getName());
+		clonedCity.setId(id);
+		for (Ilce ilce : ilceSet) {
+			clonedCity.addIlce(ilce.clone());
+		}
+		return clonedCity;
+	}
+
+	protected void setId(Long id) {
+		this.id = id;
 	}
 
 }

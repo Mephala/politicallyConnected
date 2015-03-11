@@ -39,5 +39,9 @@
       	<mapping class="serviceprovider.authorFetcher.FetchedArticle"/>
       	<mapping class="serviceprovider.authorFetcher.FetchedAuthor"/>
       	<mapping class="serviceprovider.relationer.model.DBImage"/>
+      	<mapping class="serviceprovider.service.address.City"/>
+      	<mapping class="serviceprovider.service.address.Ilce"/>
+      	<mapping class="serviceprovider.service.address.Semt"/>
+      	<mapping class="serviceprovider.service.address.Mahalle"/>
     </session-factory>
 </hibernate-configuration>

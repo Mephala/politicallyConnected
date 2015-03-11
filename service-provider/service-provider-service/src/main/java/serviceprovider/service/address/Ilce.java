@@ -9,10 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 @Entity
-public class Ilce {
-
+public class Ilce implements Cloneable {
+	@Transient
 	private Set<String> savedSemtNames;
 
 	@Id
@@ -25,7 +26,7 @@ public class Ilce {
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Semt> semtSet;
 
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -33,7 +34,7 @@ public class Ilce {
 		this.name = name;
 	}
 
-	protected Long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -53,7 +54,7 @@ public class Ilce {
 		savedSemtNames = new HashSet<>();
 	}
 
-	public boolean containsSemtWithName(String semtName) {
+	protected boolean containsSemtWithName(String semtName) {
 		return savedSemtNames.contains(semtName);
 	}
 
@@ -64,6 +65,16 @@ public class Ilce {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
+	}
+
+	@Override
+	public Ilce clone() {
+		Ilce clonedIlce = new Ilce(getName());
+		clonedIlce.setId(id);
+		for (Semt semt : semtSet) {
+			clonedIlce.addSemt(semt.clone());
+		}
+		return clonedIlce;
 	}
 
 	@Override
@@ -86,6 +97,10 @@ public class Ilce {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	protected void setId(Long id) {
+		this.id = id;
 	}
 
 }

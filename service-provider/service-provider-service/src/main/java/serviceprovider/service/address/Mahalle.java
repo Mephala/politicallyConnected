@@ -6,16 +6,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-class Mahalle {
+public class Mahalle implements Cloneable {
 
 	@Id
 	@GeneratedValue
-	public Long id;
+	private Long id;
 
 	@Column(name = "NAME")
 	private String name;
 
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -23,7 +23,7 @@ class Mahalle {
 		this.name = name;
 	}
 
-	protected Long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -35,6 +35,13 @@ class Mahalle {
 	protected Mahalle(String name) {
 		super();
 		this.name = name;
+	}
+
+	@Override
+	public Mahalle clone() {
+		Mahalle clonedMahalle = new Mahalle(getName());
+		clonedMahalle.setId(id);
+		return clonedMahalle;
 	}
 
 	@Override
@@ -66,6 +73,10 @@ class Mahalle {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	protected void setId(Long id) {
+		this.id = id;
 	}
 
 }

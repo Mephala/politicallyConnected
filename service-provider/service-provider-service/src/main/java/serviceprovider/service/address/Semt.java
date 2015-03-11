@@ -9,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 @Entity
-class Semt {
+public class Semt implements Cloneable {
+	@Transient
 	private Set<String> savedMahalleNames;
 
 	@Id
@@ -24,7 +26,7 @@ class Semt {
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Mahalle> mahalleSet;
 
-	protected Long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -32,7 +34,7 @@ class Semt {
 		this.id = id;
 	}
 
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -72,6 +74,16 @@ class Semt {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
+	}
+
+	@Override
+	public Semt clone() {
+		Semt clonedSemt = new Semt(getName());
+		clonedSemt.setId(id);
+		for (Mahalle mahalle : mahalleSet) {
+			clonedSemt.addMahalle(mahalle.clone());
+		}
+		return clonedSemt;
 	}
 
 	@Override
