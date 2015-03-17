@@ -1,13 +1,15 @@
 package launcher.view;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class LoadingData {
 	private static LoadingData instance;
-	private final long totalData;
+	private long totalData;
 	private long processedData;
 	private String info;
+	private AtomicBoolean downloadStarted = new AtomicBoolean(false);
 
-	private LoadingData(final long totalData) {
-		this.totalData = totalData;
+	private LoadingData() {
 		this.info = "Launcher app başlatılıyor...";
 	}
 
@@ -19,9 +21,9 @@ public class LoadingData {
 		return (int) (processedData * 100 / totalData);
 	}
 
-	public static synchronized LoadingData constructLoadingData(final long totalDataToProcess) {
+	public static synchronized LoadingData constructLoadingData() {
 		if (instance == null)
-			instance = new LoadingData(totalDataToProcess);
+			instance = new LoadingData();
 		return instance;
 	}
 
@@ -31,5 +33,13 @@ public class LoadingData {
 
 	public synchronized void setInfo(String info) {
 		this.info = info;
+	}
+
+	public synchronized AtomicBoolean getDownloadStarted() {
+		return downloadStarted;
+	}
+
+	public synchronized void setTotalData(long totalData) {
+		this.totalData = totalData;
 	}
 }
