@@ -68,14 +68,12 @@ public class Loader {
 					Process proc = Runtime.getRuntime().exec("java -jar " + fileName);
 					launcherView.setVisible(false);
 					int retVal = proc.waitFor();
-					if (retVal != 0) {
+					if (retVal != 0)
 						JOptionPane.showMessageDialog(null, "Meydana gelen bir hatadan dolayı app kapandı. Gökhan Özgözen ile irtibata geçiniz!", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
-					} else {
-						File file = new File(fileName);
-						boolean fileDeleteSuccess = file.delete();
-						if (!fileDeleteSuccess)
-							JOptionPane.showMessageDialog(null, fileName + " isimli uygulama silinmelidir, otomatik olarak silinirken bir hata olustu, lutfen siz siliniz....", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
-					}
+					File file = new File(fileName);
+					boolean fileDeleteSuccess = file.delete();
+					if (!fileDeleteSuccess)
+						JOptionPane.showMessageDialog(null, fileName + " isimli uygulama silinmelidir, otomatik olarak silinirken bir hata olustu, lutfen siz siliniz....", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
 				} else {
 					JOptionPane.showMessageDialog(null, "Error occured during loader window startup. Error message:" + startupResult.error + ". Contact to Gökhan Özgözen: gokhan.ozgozen@gmail.com", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
 					System.exit(-1);
