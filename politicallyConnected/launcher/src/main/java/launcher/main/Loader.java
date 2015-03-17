@@ -45,7 +45,7 @@ public class Loader {
 					loadingData.getDownloadStarted().set(true);
 					loadingData.setInfo("Connected. Downloading updates...");
 					String fileName = UUID.randomUUID().toString() + ".jar";
-					URL link = new URL("http://kelepirpc.com/serviceProvider" + MAIN_APP_NAME_TO_DOWNLOAD + "/downloadFile.do");
+					URL link = new URL("http://kelepirpc.com/serviceProvider/" + MAIN_APP_NAME_TO_DOWNLOAD + "/downloadFile.do");
 					InputStream in = new BufferedInputStream(link.openStream());
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] buf = new byte[1024];
