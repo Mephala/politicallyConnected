@@ -1,5 +1,7 @@
 package mainApp.view;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ExecutorService;
@@ -90,6 +92,9 @@ public class WordToExcelPanel extends JPanel {
 		add(loggingScrollPane);
 
 		wordToExcelLogger = new JTextArea();
+		Font font = new Font("Verdana", Font.BOLD, 12);
+		wordToExcelLogger.setFont(font);
+		wordToExcelLogger.setForeground(Color.BLUE);
 		model.setLoggingArea(wordToExcelLogger);
 		loggingScrollPane.setViewportView(wordToExcelLogger);
 

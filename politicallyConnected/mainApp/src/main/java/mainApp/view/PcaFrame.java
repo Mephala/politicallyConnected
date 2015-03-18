@@ -2,9 +2,12 @@ package mainApp.view;
 
 import java.awt.EventQueue;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import mainApp.utils.AppUtils;
 
 public class PcaFrame extends JFrame {
 
@@ -27,6 +30,9 @@ public class PcaFrame extends JFrame {
 			public void run() {
 				try {
 					PcaFrame frame = new PcaFrame();
+					frame.setTitle("Politically Connected Software --- Gokhan Ozgozen");
+					ImageIcon img = new ImageIcon(AppUtils.getResourcePath("conversionIcon.png"));
+					frame.setIconImage(img.getImage());
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
