@@ -1,6 +1,10 @@
 package service.provider.client.executor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -76,6 +80,25 @@ public class ServiceClient {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	/**
+	 * @return -1 if file doesnt exist, filesize in bytes if it exists.
+	 */
+	public static Long getFileSizeForDownload(String fileName) {
+		URL fileSizeUrl;
+		Long fileSize = Long.valueOf(-1);
+		try {
+			fileSizeUrl = new URL(urlRoot + "/" + fileName + "/getFileSize.do");
+			BufferedReader in = new BufferedReader(new InputStreamReader(fileSizeUrl.openStream()));
+			String sizeInStrings = in.readLine(); // Size of file in bytes.
+			fileSize = Long.parseLong(sizeInStrings);
+		} catch (MalformedURLException e) {
+			System.err.println("Error connecting url:" + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Error reading from url:" + e.getMessage());
+		}
+		return fileSize;
 	}
 
 	public static GetAllCitiesResponseDto getAllCities(GetAllCitiesRequestDto getAllCitiesRequest) {

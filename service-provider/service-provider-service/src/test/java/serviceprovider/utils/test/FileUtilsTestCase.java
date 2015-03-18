@@ -6,7 +6,7 @@ import mockit.integration.junit4.JMockit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import serviceprovider.util.FileUtils;
+import serviceprovider.util.SPSFileUtils;
 
 @RunWith(JMockit.class)
 public class FileUtilsTestCase {
@@ -16,11 +16,11 @@ public class FileUtilsTestCase {
 
 	@Test
 	public void testGettingInputStream() {
-		assertTrue(FileUtils.getFileAsInputStream(VALID_FILE_NAME) != null);
+		assertTrue(SPSFileUtils.getFileAsInputStream(VALID_FILE_NAME) != null);
 	}
 
 	@Test
 	public void testNotGettingInputStream() {
-		assertTrue(FileUtils.getFileAsInputStream(INVALID_FILE_NAME) == null);
+		assertTrue(SPSFileUtils.getFileAsInputStream(INVALID_FILE_NAME) == null);
 	}
 }

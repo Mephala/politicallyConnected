@@ -65,7 +65,7 @@ import service.provider.common.response.SaveUserResponseDto;
 public class TestClient {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, FileNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
-		ServiceClient.initialize("http://localhost:8080/");
+		// ServiceClient.initialize("http://localhost:8080/");
 		// testUserSaveAndLogin();
 		// ProviderTests();
 		// categoryTest();
