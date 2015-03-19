@@ -1,11 +1,14 @@
 package service.provider.client.executor;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -21,6 +24,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.swing.JOptionPane;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -35,11 +39,13 @@ import service.provider.common.request.DeleteRemembererRequestDto;
 import service.provider.common.request.DeleteSchedulerRequestDto;
 import service.provider.common.request.GetAllCategoryIdsRequestDto;
 import service.provider.common.request.GetAllConfigurationRequestDto;
+import service.provider.common.request.GetAllImageIdsRequestDto;
 import service.provider.common.request.GetAllProvidersRequestDto;
 import service.provider.common.request.GetAllRememberersRequestDto;
 import service.provider.common.request.GetAllSchedulersRequestDto;
 import service.provider.common.request.GetAuthorsRequestDto;
 import service.provider.common.request.GetCategoryRequestDto;
+import service.provider.common.request.GetImageRequestDto;
 import service.provider.common.request.LoginUserRequestDto;
 import service.provider.common.request.RequestDtoFactory;
 import service.provider.common.request.SaveCategoryRequestDto;
@@ -53,10 +59,12 @@ import service.provider.common.response.DeleteSchedulerResponseDto;
 import service.provider.common.response.GetAllAuthorsResponseDto;
 import service.provider.common.response.GetAllCategoryIdsResponseDto;
 import service.provider.common.response.GetAllCitiesResponseDto;
+import service.provider.common.response.GetAllImageIdsResponseDto;
 import service.provider.common.response.GetAllProvidersResponseDto;
 import service.provider.common.response.GetAllRememberersResponseDto;
 import service.provider.common.response.GetAllSchedulersResponseDto;
 import service.provider.common.response.GetCategoryResponseDto;
+import service.provider.common.response.GetImageResponseDto;
 import service.provider.common.response.LoginUserResponseDto;
 import service.provider.common.response.SaveProviderResponseDto;
 import service.provider.common.response.SaveSchedulerResponseDto;
@@ -64,8 +72,9 @@ import service.provider.common.response.SaveUserResponseDto;
 
 public class TestClient {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, FileNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
-		// ServiceClient.initialize("http://localhost:8080/");
+	public static void main(String[] args) throws NoSuchAlgorithmException, FileNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException,
+			IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+		ServiceClient.initialize("http://localhost:8080/");
 		// testUserSaveAndLogin();
 		// ProviderTests();
 		// categoryTest();
@@ -79,7 +88,25 @@ public class TestClient {
 		// testGettingAllAuthorsDto();
 		// testGettingConfigurations();
 		// cryptoTest();
-		citiesTest();
+		// citiesTest();
+		testGettingImage();
+	}
+
+	private static void testGettingImage() throws IOException {
+		GetAllImageIdsRequestDto getAllImageIds = RequestDtoFactory.createGetAllImageIdsRequestDto(RequestApplication.WEB);
+		GetAllImageIdsResponseDto getAllImageResponse = ServiceClient.getAllImageIds(getAllImageIds);
+		List<Long> ids = getAllImageResponse.getImageIds();
+		for (Long imageId : ids) {
+			GetImageRequestDto req = RequestDtoFactory.createGetImageRequest(RequestApplication.WEB);
+			GetImageResponseDto resp = ServiceClient.getImage(req);
+			byte[] decodedBytes = Base64.decodeBase64(resp.getImageDto().getEncodedData().getBytes());
+			OutputStream out = new BufferedOutputStream(new FileOutputStream("recreatedLena.jpg"));
+			out.write(decodedBytes);
+			out.close();
+			int result = JOptionPane.showConfirmDialog(null, "Image olustu mu ?", "Test kontrolu", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			boolean deleteRecreatedLena = new File("recreatedLena.jpg").delete();
+		}
+
 	}
 
 	private static void citiesTest() {
@@ -91,7 +118,8 @@ public class TestClient {
 
 	}
 
-	private static void cryptoTest() throws NoSuchAlgorithmException, IOException, FileNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+	private static void cryptoTest() throws NoSuchAlgorithmException, IOException, FileNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
+			BadPaddingException, ClassNotFoundException {
 		MessageDigest md = MessageDigest.getInstance("MD5");
 		String gokhan = "Prosege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdiniProsege!!! prostagmaaann....Gökhan Özgözen .`11`2`1213213321 `3`13`13`13124214124.. Hanasinin hamina attiririm sikerim nezdini.";
 		System.out.println(gokhan);

@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
+import serviceprovider.Application;
 import serviceprovider.dao.AbstractDAO;
 import serviceprovider.relationer.model.DBImage;
 
@@ -64,5 +66,15 @@ public class DBImageDAO extends AbstractDAO<DBImage> {
 		Session session = createSessionAndBeginTransaction();
 		session.delete(model);
 		commitTransactionAndCloseSession(session);
+	}
+
+	public List<DBImage> getAllModelList(Application app) {
+		List<DBImage> images;
+		Session session = createSessionAndBeginTransaction();
+		Criteria criteria = session.createCriteria(DBImage.class);
+		criteria.add(Restrictions.eq("application", app));
+		images = criteria.list();
+		commitTransactionAndCloseSession(session);
+		return images;
 	}
 }

@@ -93,4 +93,16 @@ public class RequestDtoFactory {
 		return request;
 	}
 
+	public static GetAllImageIdsRequestDto createGetAllImageIdsRequestDto(RequestApplication application) {
+		GetAllImageIdsRequestDto request = new GetAllImageIdsRequestDto(RequestDtoConstants.GET_ALL_IMAGE_IDS_URI);
+		request.setRequestApp(application);
+		return request;
+	}
+
+	public static GetImageRequestDto createGetImageRequest(RequestApplication application) {
+		GetImageRequestDto request = new GetImageRequestDto(RequestDtoConstants.GET_IMAGE_URI);
+		request.setRequestApp(application);
+		return request;
+	}
+
 }

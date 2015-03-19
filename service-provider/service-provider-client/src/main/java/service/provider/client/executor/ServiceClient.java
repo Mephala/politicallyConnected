@@ -24,11 +24,13 @@ import service.provider.common.request.DeleteSchedulerRequestDto;
 import service.provider.common.request.GetAllCategoryIdsRequestDto;
 import service.provider.common.request.GetAllCitiesRequestDto;
 import service.provider.common.request.GetAllConfigurationRequestDto;
+import service.provider.common.request.GetAllImageIdsRequestDto;
 import service.provider.common.request.GetAllProvidersRequestDto;
 import service.provider.common.request.GetAllRememberersRequestDto;
 import service.provider.common.request.GetAllSchedulersRequestDto;
 import service.provider.common.request.GetAuthorsRequestDto;
 import service.provider.common.request.GetCategoryRequestDto;
+import service.provider.common.request.GetImageRequestDto;
 import service.provider.common.request.LoginUserRequestDto;
 import service.provider.common.request.SaveCategoryRequestDto;
 import service.provider.common.request.SaveConfigurationRequestDto;
@@ -43,10 +45,12 @@ import service.provider.common.response.GetAllAuthorsResponseDto;
 import service.provider.common.response.GetAllCategoryIdsResponseDto;
 import service.provider.common.response.GetAllCitiesResponseDto;
 import service.provider.common.response.GetAllConfigurationResponseDto;
+import service.provider.common.response.GetAllImageIdsResponseDto;
 import service.provider.common.response.GetAllProvidersResponseDto;
 import service.provider.common.response.GetAllRememberersResponseDto;
 import service.provider.common.response.GetAllSchedulersResponseDto;
 import service.provider.common.response.GetCategoryResponseDto;
+import service.provider.common.response.GetImageResponseDto;
 import service.provider.common.response.LoginUserResponseDto;
 import service.provider.common.response.SaveConfigurationResponseDto;
 import service.provider.common.response.SaveProviderResponseDto;
@@ -99,6 +103,14 @@ public class ServiceClient {
 			System.err.println("Error reading from url:" + e.getMessage());
 		}
 		return fileSize;
+	}
+
+	public static GetImageResponseDto getImage(GetImageRequestDto getImageRequest) {
+		return process(getImageRequest, GetImageResponseDto.class, GetImageRequestDto.class);
+	}
+
+	public static GetAllImageIdsResponseDto getAllImageIds(GetAllImageIdsRequestDto getAllImageIdsRequest) {
+		return process(getAllImageIdsRequest, GetAllImageIdsResponseDto.class, GetAllImageIdsRequestDto.class);
 	}
 
 	public static GetAllCitiesResponseDto getAllCities(GetAllCitiesRequestDto getAllCitiesRequest) {
@@ -154,8 +166,12 @@ public class ServiceClient {
 	}
 
 	/**
-	 * Ornek kullanim: SaveProviderRequestDto saveProviderRequest = RequestDtoFactory.createSaveProviderRequestDto(); ProviderDto providerDto = new ProviderDto(); // Zorunlu alanlar providerDto.setGsm("5426781232");
-	 * providerDto.setTckn("123213"); providerDto.setTitle("Murtaza Kuruyemis"); saveProviderRequest.setProviderDto(providerDto); SaveProviderResponseDto response = ServiceClient.saveProvider(saveProviderRequest);
+	 * Ornek kullanim: SaveProviderRequestDto saveProviderRequest =
+	 * RequestDtoFactory.createSaveProviderRequestDto(); ProviderDto providerDto
+	 * = new ProviderDto(); // Zorunlu alanlar providerDto.setGsm("5426781232");
+	 * providerDto.setTckn("123213"); providerDto.setTitle("Murtaza Kuruyemis");
+	 * saveProviderRequest.setProviderDto(providerDto); SaveProviderResponseDto
+	 * response = ServiceClient.saveProvider(saveProviderRequest);
 	 */
 	public static SaveProviderResponseDto saveProvider(SaveProviderRequestDto saveProviderRequest) {
 		return process(saveProviderRequest, SaveProviderResponseDto.class, SaveProviderRequestDto.class);

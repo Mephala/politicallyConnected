@@ -18,4 +18,6 @@ class RequestDtoConstants {
 	protected static final String GET_ALL_CONFIGURATIONS_REQUEST_URI = "/getAllConfigurations.do";
 	protected static final String SAVE_CONFIGURATION_REQUEST_URI = "/saveConfiguration.do";
 	protected static final String GET_ALL_CITIES_REQUEST_URI = "/getAllCities.do";
+	protected static final String GET_ALL_IMAGE_IDS_URI = "/getAllImageIds.do";
+	protected static final String GET_IMAGE_URI = "/getImage.do";
 }
