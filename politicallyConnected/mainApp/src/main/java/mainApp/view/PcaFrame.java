@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import mainApp.utils.AppUtils;
+import mainApp.utils.MainAppUtils;
 
 public class PcaFrame extends JFrame {
 
@@ -31,8 +31,9 @@ public class PcaFrame extends JFrame {
 				try {
 					PcaFrame frame = new PcaFrame();
 					frame.setTitle("Politically Connected Software --- Gokhan Ozgozen");
-					ImageIcon img = new ImageIcon(AppUtils.getResourcePath("conversionIcon.png"));
-					frame.setIconImage(img.getImage());
+					ImageIcon img = MainAppUtils.createImageIcon("/Hero_Adelaide.png", "Adelaide");
+					if (img != null)
+						frame.setIconImage(img.getImage());
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

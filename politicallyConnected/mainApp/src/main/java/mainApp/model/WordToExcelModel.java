@@ -10,6 +10,7 @@ public class WordToExcelModel {
 	private File chosenFile;
 	private JProgressBar progress;
 	private JTextArea loggingArea;
+	private Integer threadCount;
 
 	private WordToExcelModel() {
 
@@ -43,5 +44,13 @@ public class WordToExcelModel {
 
 	public synchronized void setLoggingArea(JTextArea loggingArea) {
 		this.loggingArea = loggingArea;
+	}
+
+	public synchronized Integer getThreadCount() {
+		return threadCount;
+	}
+
+	public synchronized void setThreadCount(Integer threadCount) {
+		this.threadCount = threadCount;
 	}
 }

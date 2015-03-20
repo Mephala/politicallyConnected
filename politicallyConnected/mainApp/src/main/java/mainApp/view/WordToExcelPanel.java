@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
@@ -35,6 +37,9 @@ public class WordToExcelPanel extends JPanel {
 	private final JTextArea wordToExcelLogger;
 	private final JProgressBar wordToExcelProgress;
 	private final JScrollPane loggingScrollPane;
+	private final JSlider slider;
+	private final JLabel fileChooserLabel;
+	private final JLabel progressBarLabel;
 
 	public static synchronized WordToExcelPanel getInstance() {
 		if (instance == null)
@@ -74,6 +79,7 @@ public class WordToExcelPanel extends JPanel {
 		add(chooseFileButton);
 
 		createExcelButton = new JButton("Oluştur");
+		createExcelButton.setEnabled(false);
 		createExcelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panelExecutors.submit(new Runnable() {
@@ -88,7 +94,7 @@ public class WordToExcelPanel extends JPanel {
 
 		loggingScrollPane = new JScrollPane();
 		loggingScrollPane.setVisible(false);
-		loggingScrollPane.setBounds(10, 134, 228, 192);
+		loggingScrollPane.setBounds(10, 134, 272, 192);
 		add(loggingScrollPane);
 
 		wordToExcelLogger = new JTextArea();
@@ -100,28 +106,74 @@ public class WordToExcelPanel extends JPanel {
 
 		wordToExcelProgress = new JProgressBar(0, 100);
 		model.setProgress(wordToExcelProgress);
-		wordToExcelProgress.setBounds(253, 205, 178, 16);
+		wordToExcelProgress.setBounds(292, 204, 178, 16);
 		wordToExcelProgress.setStringPainted(true);
 		wordToExcelProgress.setVisible(false);
 		add(wordToExcelProgress);
+
+		fileChooserLabel = new JLabel("Lütfen bir dosya seçiniz...");
+		fileChooserLabel.setBounds(10, 103, 371, 14);
+		fileChooserLabel.setVisible(false);
+		add(fileChooserLabel);
+
+		progressBarLabel = new JLabel("New labela");
+		progressBarLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		progressBarLabel.setBounds(292, 165, 178, 14);
+		progressBarLabel.setVisible(false);
+		add(progressBarLabel);
+
+		slider = new JSlider(JSlider.HORIZONTAL);
+		slider.setValue(1);
+		slider.setPaintTicks(true);
+		slider.setPaintLabels(true);
+		slider.setMinorTickSpacing(1);
+		slider.setMaximum(8);
+		slider.setMinimum(1);
+		slider.setBounds(198, 356, 272, 24);
+		add(slider);
+
+		JLabel lblNewLabel_4 = new JLabel("İşlemci Kullanımı");
+		lblNewLabel_4.setBounds(10, 366, 178, 14);
+		add(lblNewLabel_4);
 
 	}
 
 	private void chooseFile() {
 		int fileChooseStatus = fileChooser.showOpenDialog(instance);
 		if (fileChooseStatus == JFileChooser.APPROVE_OPTION) {
-			model.setChosenFile(fileChooser.getSelectedFile());
+			File chosenFile = fileChooser.getSelectedFile();
+			model.setChosenFile(chosenFile);
+			fileChooserLabel.setText(chosenFile.getAbsolutePath() + " selected.");
+			fileChooserLabel.setVisible(true);
+			createExcelButton.setEnabled(true);
 		}
 	}
 
 	private void createExcelFile() {
+		lockViewForProcessing();
+
+		manager.createExcel();
+
+		openViewForProcessing();
+	}
+
+	private void openViewForProcessing() {
+		chooseFileButton.setEnabled(true);
+		createExcelButton.setEnabled(true);
+		fileChooserLabel.setVisible(false);
+		loggingScrollPane.setVisible(false);
+		wordToExcelProgress.setVisible(false);
+	}
+
+	private void lockViewForProcessing() {
+		wordToExcelProgress.setValue(0);
+		wordToExcelLogger.setText("");
 		chooseFileButton.setEnabled(false);
 		createExcelButton.setEnabled(false);
+		model.setThreadCount(slider.getValue());
 		if (!loggingScrollPane.isVisible())
 			loggingScrollPane.setVisible(true);
 		if (!wordToExcelProgress.isVisible())
 			wordToExcelProgress.setVisible(true);
-		manager.createExcel();
-
 	}
 }

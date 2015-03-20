@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JOptionPane;
@@ -39,18 +42,34 @@ public class WordToExcellManager {
 	}
 
 	public void createExcel() {
-		JTextArea wordToExcelLogger = model.getLoggingArea();
-		JProgressBar wordToExcelProgress = model.getProgress();
+		long start = System.currentTimeMillis();
+		final JTextArea wordToExcelLogger = model.getLoggingArea();
+		final JProgressBar wordToExcelProgress = model.getProgress();
+		int threadCount = model.getThreadCount();
+		final ExecutorService cachedThreads = Executors.newFixedThreadPool(threadCount);
 		File file = model.getChosenFile();
-		String year = file.getName();
+		final String year = file.getName();
 		File[] wordFiles = file.listFiles();
 		final int totalFiles = wordFiles.length;
 		wordToExcelLogger.setText(totalFiles + " of files are going to be processed. \n");
-		AtomicInteger processCount = new AtomicInteger(1);
-		for (File wordFile : wordFiles) {
-			readFileAsync(wordToExcelLogger, wordToExcelProgress, year, totalFiles, processCount, wordFile);
+		final AtomicInteger processCount = new AtomicInteger(1);
+		for (final File wordFile : wordFiles) {
+			cachedThreads.submit(new Runnable() {
+				public void run() {
+					readFileAsync(wordToExcelLogger, wordToExcelProgress, year, totalFiles, processCount, wordFile);
+				}
+			});
 		}
-
+		try {
+			cachedThreads.shutdown();
+			boolean gracefulTermination = cachedThreads.awaitTermination(120, TimeUnit.SECONDS);
+			if (!gracefulTermination)
+				JOptionPane.showMessageDialog(null, "Thread fault. Contact to Gökhan özgözen", "Big Fault", JOptionPane.ERROR);
+			System.out.println(readWordData);
+			JOptionPane.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Thread fault. Contact to Gökhan özgözen", "Big Fault", JOptionPane.ERROR);
+		}
 	}
 
 	private void readFileAsync(JTextArea wordToExcelLogger, JProgressBar wordToExcelProgress, String year, final int totalFiles, AtomicInteger processCount, File wordFile) {
@@ -96,6 +115,7 @@ public class WordToExcellManager {
 			String actionArea = documentAsString.substring(gmIndex + 11, phoneIndex);
 			List<String> members = new ArrayList<String>();
 			getMembers(actionArea, members);
+			addMembers(members, file.getName(), year);
 			isSuccess = true;
 		} catch (Exception exep) {
 			System.err.println(exep.getMessage());
@@ -105,27 +125,30 @@ public class WordToExcellManager {
 	}
 
 	private synchronized void addMembers(List<String> memberName, String company, String year) {
-		Manager manager = new Manager();
-		Set<ManagementJob> jobs = new HashSet<ManagementJob>();
-		ManagementJob mj = new ManagementJob();
-		mj.setName(company);
-		mj.setYear(year);
-		jobs.add(mj);
-		manager.setJobs(jobs);
-		if (readWordData.contains(manager)) {
-			Iterator<Manager> managerIterator = readWordData.iterator();
-			while (managerIterator.hasNext()) {
-				Manager m = managerIterator.next();
-				if (m.equals(manager)) {
-					Set<ManagementJob> savedJobs = m.getJobs();
-					if (!savedJobs.contains(mj)) {
-						savedJobs.add(mj);
+		for (String mName : memberName) {
+			Manager manager = new Manager();
+			manager.setName(mName);
+			Set<ManagementJob> jobs = new HashSet<ManagementJob>();
+			ManagementJob mj = new ManagementJob();
+			mj.setName(company);
+			mj.setYear(year);
+			jobs.add(mj);
+			manager.setJobs(jobs);
+			if (readWordData.contains(manager)) {
+				Iterator<Manager> managerIterator = readWordData.iterator();
+				while (managerIterator.hasNext()) {
+					Manager m = managerIterator.next();
+					if (m.equals(manager)) {
+						Set<ManagementJob> savedJobs = m.getJobs();
+						if (!savedJobs.contains(mj)) {
+							savedJobs.add(mj);
+						}
+						break;
 					}
-					break;
 				}
+			} else {
+				readWordData.add(manager);
 			}
-		} else {
-			readWordData.add(manager);
 		}
 	}
 
@@ -143,8 +166,7 @@ public class WordToExcellManager {
 					if (alphaIndex < betaIndex) {
 						String member = actionArea.substring(alphaIndex + 1, betaIndex + 1);
 						member = member.trim();
-						if (member.length() > 0 && !member.contains("YÖNETİM") && !member.contains("(") && !member.contains("Board") && !member.contains(":")
-								&& !member.contains("-"))
+						if (member.length() > 0 && !member.contains("YÖNETİM") && !member.contains("(") && !member.contains("Board") && !member.contains(":") && !member.contains("-"))
 							members.add(member);
 						if (betaIndex < actionArea.length() - 1)
 							getMembers(actionArea.substring(betaIndex + 1), members);

@@ -52,4 +52,9 @@ public class ManagementJob {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "ManagementJob [name=" + name + ", year=" + year + "]";
+	}
+
 }

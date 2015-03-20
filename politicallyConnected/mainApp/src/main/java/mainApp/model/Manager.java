@@ -48,4 +48,9 @@ public class Manager {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Manager [name=" + name + ", jobs=" + jobs + "] \n";
+	}
+
 }
