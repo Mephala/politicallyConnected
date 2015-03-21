@@ -1,6 +1,8 @@
 package mainApp.view;
 
 import java.awt.EventQueue;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -29,6 +31,10 @@ public class PcaFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					System.setProperty("file.encoding", "UTF-8");
+					Field charset = Charset.class.getDeclaredField("defaultCharset");
+					charset.setAccessible(true);
+					charset.set(null, null);
 					PcaFrame frame = new PcaFrame();
 					frame.setTitle("Politically Connected Software --- Gokhan Ozgozen");
 					ImageIcon img = MainAppUtils.createImageIcon("/Hero_Adelaide.png", "Adelaide");
