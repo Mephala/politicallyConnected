@@ -2,6 +2,7 @@ package launcher.main;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +47,7 @@ public class Loader {
 						loadingData.getDownloadStarted().set(true);
 						loadingData.setInfo("Connected. Downloading updates...");
 						final String fileName = UUID.randomUUID().toString() + ".jar";
-						URL link = new URL("http://localhost:8080/" + MAIN_APP_NAME_TO_DOWNLOAD + "/downloadFile.do");
+						URL link = new URL("http://kelepirpc.com/serviceProvider/" + MAIN_APP_NAME_TO_DOWNLOAD + "/downloadFile.do");
 						InputStream in = new BufferedInputStream(link.openStream());
 						ByteArrayOutputStream out = new ByteArrayOutputStream();
 						byte[] buf = new byte[1024];
@@ -67,38 +68,22 @@ public class Loader {
 						fos.write(response);
 						fos.close();
 						Executors.newCachedThreadPool().submit(new Runnable() {
-
 							public void run() {
 								try {
-									Process proc = Runtime.getRuntime().exec("java -jar " + fileName + " " + fileName);
+									Runtime.getRuntime().exec("java -jar " + fileName + " " + fileName);
 								} catch (IOException e) {
 									JOptionPane.showMessageDialog(null, "Reeskont");
 								}
-
 							}
 						});
-
 						launcherView.setVisible(false);
-						// int retVal = proc.waitFor();
-						// if (retVal != 0)
-						// JOptionPane.showMessageDialog(null,
-						// "Meydana gelen bir hatadan dolayı app kapandı. Gökhan Özgözen ile irtibata geçiniz!",
-						// "HATA!!!!",
-						// JOptionPane.ERROR_MESSAGE);
-						// File file = new File(fileName);
-						// boolean fileDeleteSuccess = file.delete();
-						// if (!fileDeleteSuccess)
-						// JOptionPane.showMessageDialog(null, fileName +
-						// " isimli uygulama silinmelidir, otomatik olarak silinirken bir hata olustu, lutfen siz siliniz....",
-						// "HATA!!!!", JOptionPane.ERROR_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(null, "Error occured during loader window startup. Error message:" + startupResult.error
-								+ ". Contact to Gökhan Özgözen: gokhan.ozgozen@gmail.com", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
+						JOptionPane
+								.showMessageDialog(null, "Error occured during loader window startup. Error message:" + startupResult.error + ". Contact to Gökhan Özgözen: gokhan.ozgozen@gmail.com", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
 						System.exit(-1);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Connection failure. Either you are offline or the servers are down. Contact to Gökhan Özgözen: gokhan.ozgozen@gmail.com",
-							"HATA!!!!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Connection failure. Either you are offline or the servers are down. Contact to Gökhan Özgözen: gokhan.ozgozen@gmail.com", "HATA!!!!", JOptionPane.ERROR_MESSAGE);
 					System.exit(-1);
 				}
 			} catch (Exception e) {
@@ -108,7 +93,9 @@ public class Loader {
 				System.exit(0);
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, args[0]);
+			String fileName = args[0];
+			File file = new File(fileName);
+			file.delete();
 		}
 	}
 }

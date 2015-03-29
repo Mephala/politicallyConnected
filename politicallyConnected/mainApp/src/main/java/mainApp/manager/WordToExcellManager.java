@@ -29,7 +29,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
 import mainApp.model.ManagementJob;
+import mainApp.model.ManagementJobComparator;
 import mainApp.model.Manager;
+import mainApp.model.ManagerComparator;
 import mainApp.model.WordToExcelModel;
 import mainApp.utils.MainAppUtils;
 
@@ -69,8 +71,7 @@ public class WordToExcellManager {
 	public void createExcel() {
 		readFromWordDocumentsInSelectedFolder();
 		if (MainAppUtils.isCollectionEmpty(readWordData)) {
-			JOptionPane.showMessageDialog(null, "Code:0xA3 . Process edilen dökümanlardan hiç bir kişi - kurum bağlantısı bulunamadı! ---> gokhan.ozgozen@gmail.com",
-					"Veri bulunamadi", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Code:0xA3 . Process edilen dökümanlardan hiç bir kişi - kurum bağlantısı bulunamadı! ---> gokhan.ozgozen@gmail.com", "Veri bulunamadi", JOptionPane.ERROR_MESSAGE);
 		} else {
 			logger.info("Read manager list is the following...");
 			for (Manager manager : readWordData) {
@@ -102,24 +103,20 @@ public class WordToExcellManager {
 			if (gracefulTermination) {
 				boolean companyFirstSuccess = MainAppUtils.fileCreationSuccess(companyFirst);
 				if (companyFirstSuccess)
-					JOptionPane.showMessageDialog(null, "Company First excel dosyası başarı ile oluşturuldu. Dosya adı:" + companyFirst.getName(), "Excel Oluşturma başarılı",
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Company First excel dosyası başarı ile oluşturuldu. Dosya adı:" + companyFirst.getName(), "Excel Oluşturma başarılı", JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null, "Code:0xA5. Company First excel dosyası oluşturulamadı.", "Hata", JOptionPane.ERROR_MESSAGE);
 				boolean personFirstSuccess = MainAppUtils.fileCreationSuccess(personFirst);
 				if (personFirstSuccess)
-					JOptionPane.showMessageDialog(null, "Person First excel dosyası başarı ile oluşturuldu. Dosya adı:" + personFirst.getName(), "Excel Oluşturma başarılı",
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Person First excel dosyası başarı ile oluşturuldu. Dosya adı:" + personFirst.getName(), "Excel Oluşturma başarılı", JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null, "Code:0xA6. Person First excel dosyası oluşturulamadı.", "Hata", JOptionPane.ERROR_MESSAGE);
 			} else {
 				logger.error("Threads are not gracefully terminated. Debug is required.");
-				JOptionPane
-						.showMessageDialog(null, "Code:0xA7. Excel writing thread fault. Contact to Gökhan Özgözen, gokhan.ozgozen@gmail.com", "Hata", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Code:0xA7. Excel writing thread fault. Contact to Gökhan Özgözen, gokhan.ozgozen@gmail.com", "Hata", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA7 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com. Error:" + e.getMessage(), "Big Fault",
-					JOptionPane.ERROR);
+			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA7 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com. Error:" + e.getMessage(), "Big Fault", JOptionPane.ERROR);
 		}
 	}
 
@@ -132,6 +129,7 @@ public class WordToExcellManager {
 		File file = model.getChosenFile();
 		final String year = file.getName();
 		File[] wordFiles = file.listFiles();
+		logger.info(wordFiles.length + " files are going to be processed.");
 		final int totalFiles = wordFiles.length;
 		wordToExcelLogger.setText(totalFiles + " of files are going to be processed. \n");
 		final AtomicInteger processCount = new AtomicInteger(1);
@@ -147,8 +145,7 @@ public class WordToExcellManager {
 			boolean gracefulTermination = cachedThreads.awaitTermination(120, TimeUnit.SECONDS);
 			if (!gracefulTermination)
 				JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA1 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com.", "Big Fault", JOptionPane.ERROR);
-			JOptionPane.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA2 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com.", "Big Fault", JOptionPane.ERROR);
 		}
@@ -179,6 +176,7 @@ public class WordToExcellManager {
 	private boolean readFromDocument(File file, String year) {
 		boolean isSuccess = false;
 		if (file.getName().contains(".doc") || file.getName().contains(".DOC")) {
+
 			WordExtractor extractor = null;
 			try {
 				System.setProperty("file.encoding", "UTF-8");
@@ -204,16 +202,35 @@ public class WordToExcellManager {
 				String actionArea = documentAsString.substring(gmIndex + 11, phoneIndex);
 				List<String> members = new ArrayList<String>();
 				getMembers(actionArea, members);
+				removeExtraSpacesFromMemberNames(members);
 				String companyName = file.getName().replace(".doc", "");
 				companyName = companyName.replace(".DOC", "");
 				addMembers(members, companyName, year);
 				isSuccess = true;
+				logger.info(file.getName() + " is processed and " + members.size() + " managers are associated with their companies.");
 			} catch (Exception exep) {
 				System.err.println(exep.getMessage());
 				JOptionPane.showMessageDialog(null, file.getName() + " işlenirken hata oluştu! Hata :" + exep.getMessage(), "Processing Fault", JOptionPane.ERROR_MESSAGE);
 			}
+		} else {
+			logger.info("File is not processed because it is not a valid doc file. FileName:" + file.getName());
 		}
 		return isSuccess;
+	}
+
+	private void removeExtraSpacesFromMemberNames(List<String> members) {
+		Iterator<String> memberITerator = members.iterator();
+		List<String> normalizedMembers = new ArrayList<String>();
+		while (memberITerator.hasNext()) {
+			String member = memberITerator.next();
+			String normalizedMember = MainAppUtils.removeExtraSpaceBetweenNames(member);
+			if (!member.equals(normalizedMember)) {
+				memberITerator.remove();
+				normalizedMembers.add(normalizedMember);
+			}
+		}
+		if (normalizedMembers.size() > 0)
+			members.addAll(normalizedMembers);
 	}
 
 	private synchronized void addMembers(List<String> memberName, String company, String year) {
@@ -258,8 +275,7 @@ public class WordToExcellManager {
 					if (alphaIndex < betaIndex) {
 						String member = actionArea.substring(alphaIndex + 1, betaIndex + 1);
 						member = member.trim();
-						if (member.length() > 0 && !member.contains("YÖNETİM") && !member.contains("(") && !member.contains("Board") && !member.contains(":")
-								&& !member.contains("-")) {
+						if (member.length() > 0 && !member.contains("YÖNETİM") && !member.contains("(") && !member.contains("Board") && !member.contains(":") && !member.contains("-")) {
 							logger.info("Adding member to members list for created word data. Member name:" + member);
 							try {
 								byte[] utf8Bytes = member.getBytes("UTF-8");
@@ -294,7 +310,8 @@ public class WordToExcellManager {
 		logger.info("Sheet of person first excel workbook has been created.");
 		int rowCount = 0;
 		logger.info("Reading data structure to create person first excel data.");
-		for (Manager manager : readWordData) {
+		List<Manager> sortedReadWordData = MainAppUtils.convertSetToSortedList(readWordData, ManagerComparator.COMPARATOR);
+		for (Manager manager : sortedReadWordData) {
 			logger.info("Manager data is being created for person first excel data. Manager:" + manager.getName());
 			Row row = sheet.createRow((short) rowCount);
 			logger.info("Row is created for person first excel data. Manager:" + manager.getName());
@@ -345,7 +362,8 @@ public class WordToExcellManager {
 		Map<ManagementJob, Set<Manager>> managementJobToManagerSetMap = createManagementJobToManagerMap();
 		int rowCount = 0;
 		Set<ManagementJob> companies = managementJobToManagerSetMap.keySet();
-		for (ManagementJob managementJob : companies) {
+		List<ManagementJob> sortedCompanies = MainAppUtils.convertSetToSortedList(companies, ManagementJobComparator.COMPARATOR);
+		for (ManagementJob managementJob : sortedCompanies) {
 			Row row = sheet.createRow((short) rowCount);
 			int rowCellCount = 0;
 			Cell cell = row.createCell(rowCellCount);

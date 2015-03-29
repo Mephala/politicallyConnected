@@ -15,13 +15,13 @@ import mainApp.model.Manager;
 import mockit.Deencapsulation;
 import mockit.integration.junit4.JMockit;
 
-import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 @RunWith(JMockit.class)
 public class WordToExcelManagerTestCase {
 
-	@Test
+	@Ignore
 	public void createExcelFromWordDataPersonFirst() {
 		WordToExcellManager wManager = WordToExcellManager.getInstance();
 		Manager manager = new Manager();
@@ -42,7 +42,7 @@ public class WordToExcelManagerTestCase {
 		assertTrue(deleteFile);
 	}
 
-	@Test
+	@Ignore
 	public void testCreatingJobToManagerMap() {
 		WordToExcellManager wManager = WordToExcellManager.getInstance();
 		Manager manager = createManagerWithName("Muhittin Damarli");
@@ -80,7 +80,7 @@ public class WordToExcelManagerTestCase {
 		return manager;
 	}
 
-	@Test
+	@Ignore
 	public void testCreatingCompanyFirstExcelData() {
 		WordToExcellManager wManager = WordToExcellManager.getInstance();
 		Manager manager = createManagerWithName("Muhittin Damarli");
@@ -96,4 +96,5 @@ public class WordToExcelManagerTestCase {
 		boolean deleteFile = createdExcelFile.delete();
 		assertTrue(deleteFile);
 	}
+
 }

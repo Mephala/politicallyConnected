@@ -51,12 +51,11 @@ public class PcaFrame extends JFrame {
 						frame.addWindowListener(new java.awt.event.WindowAdapter() {
 							@Override
 							public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-								if (JOptionPane.showConfirmDialog(frame, "Are you sure to close this window?", "Really Closing?", JOptionPane.YES_NO_OPTION,
-										JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+								if (JOptionPane.showConfirmDialog(frame, "Are you sure to close this application?", "Really Closing?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 									Executors.newCachedThreadPool().submit(new Runnable() {
 										public void run() {
 											try {
-												Process proc = Runtime.getRuntime().exec("java -jar pcaLoader.jar " + jarName);
+												Runtime.getRuntime().exec("java -jar pcaLoader.jar " + jarName);
 											} catch (IOException e) {
 												JOptionPane.showMessageDialog(null, "Reeskont");
 											}
