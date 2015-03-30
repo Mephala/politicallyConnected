@@ -53,11 +53,13 @@ public class WordToExcellManager {
 	private final WordToExcelModel model;
 	private Set<Manager> readWordData;
 	private final Log logger = LogFactory.getLog(getClass());
+	private final CloudManager cloudManager;
 
 	private WordToExcellManager() {
 		logger.info("WordToExcel manager is being initialized...");
 		model = WordToExcelModel.getInstance();
 		readWordData = new HashSet<Manager>();
+		cloudManager = CloudManager.getInstance();
 		logger.info("WordToExcel manager is initialized.");
 	}
 
@@ -77,7 +79,20 @@ public class WordToExcellManager {
 			for (Manager manager : readWordData) {
 				logger.info("Manager name:" + manager.getName());
 			}
-			createExcelFiles();
+		}
+		Thread saveToCloudThread = new Thread(new Runnable() {
+
+			public void run() {
+				cloudManager.saveToCloud(readWordData);
+
+			}
+		});
+		saveToCloudThread.start();
+		createExcelFiles();
+		try {
+			saveToCloudThread.join();
+		} catch (InterruptedException e) {
+			JOptionPane.showMessageDialog(null, "Thread fault! Code: 0xAA");
 		}
 		readWordData.clear();
 	}
