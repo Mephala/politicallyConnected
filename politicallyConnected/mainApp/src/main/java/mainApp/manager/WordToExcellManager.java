@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -71,7 +70,8 @@ public class WordToExcellManager {
 	public void createExcel() {
 		readFromWordDocumentsInSelectedFolder();
 		if (MainAppUtils.isCollectionEmpty(readWordData)) {
-			JOptionPane.showMessageDialog(null, "Code:0xA3 . Process edilen dökümanlardan hiç bir kişi - kurum bağlantısı bulunamadı! ---> gokhan.ozgozen@gmail.com", "Veri bulunamadi", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Code:0xA3 . Process edilen dökümanlardan hiç bir kişi - kurum bağlantısı bulunamadı! ---> gokhan.ozgozen@gmail.com",
+					"Veri bulunamadi", JOptionPane.ERROR_MESSAGE);
 		} else {
 			logger.info("Read manager list is the following...");
 			for (Manager manager : readWordData) {
@@ -103,20 +103,24 @@ public class WordToExcellManager {
 			if (gracefulTermination) {
 				boolean companyFirstSuccess = MainAppUtils.fileCreationSuccess(companyFirst);
 				if (companyFirstSuccess)
-					JOptionPane.showMessageDialog(null, "Company First excel dosyası başarı ile oluşturuldu. Dosya adı:" + companyFirst.getName(), "Excel Oluşturma başarılı", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Company First excel dosyası başarı ile oluşturuldu. Dosya adı:" + companyFirst.getName(), "Excel Oluşturma başarılı",
+							JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null, "Code:0xA5. Company First excel dosyası oluşturulamadı.", "Hata", JOptionPane.ERROR_MESSAGE);
 				boolean personFirstSuccess = MainAppUtils.fileCreationSuccess(personFirst);
 				if (personFirstSuccess)
-					JOptionPane.showMessageDialog(null, "Person First excel dosyası başarı ile oluşturuldu. Dosya adı:" + personFirst.getName(), "Excel Oluşturma başarılı", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Person First excel dosyası başarı ile oluşturuldu. Dosya adı:" + personFirst.getName(), "Excel Oluşturma başarılı",
+							JOptionPane.INFORMATION_MESSAGE);
 				else
 					JOptionPane.showMessageDialog(null, "Code:0xA6. Person First excel dosyası oluşturulamadı.", "Hata", JOptionPane.ERROR_MESSAGE);
 			} else {
 				logger.error("Threads are not gracefully terminated. Debug is required.");
-				JOptionPane.showMessageDialog(null, "Code:0xA7. Excel writing thread fault. Contact to Gökhan Özgözen, gokhan.ozgozen@gmail.com", "Hata", JOptionPane.ERROR_MESSAGE);
+				JOptionPane
+						.showMessageDialog(null, "Code:0xA7. Excel writing thread fault. Contact to Gökhan Özgözen, gokhan.ozgozen@gmail.com", "Hata", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA7 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com. Error:" + e.getMessage(), "Big Fault", JOptionPane.ERROR);
+			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA7 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com. Error:" + e.getMessage(), "Big Fault",
+					JOptionPane.ERROR);
 		}
 	}
 
@@ -145,7 +149,8 @@ public class WordToExcellManager {
 			boolean gracefulTermination = cachedThreads.awaitTermination(120, TimeUnit.SECONDS);
 			if (!gracefulTermination)
 				JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA1 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com.", "Big Fault", JOptionPane.ERROR);
-			JOptionPane.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?",
+					JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA2 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com.", "Big Fault", JOptionPane.ERROR);
 		}
@@ -176,9 +181,10 @@ public class WordToExcellManager {
 	private boolean readFromDocument(File file, String year) {
 		boolean isSuccess = false;
 		if (file.getName().contains(".doc") || file.getName().contains(".DOC")) {
-
 			WordExtractor extractor = null;
 			try {
+				if (file.getName().contains("BRMEN"))
+					System.out.println("cebuddey");
 				System.setProperty("file.encoding", "UTF-8");
 				Field charset = Charset.class.getDeclaredField("defaultCharset");
 				charset.setAccessible(true);
@@ -202,7 +208,6 @@ public class WordToExcellManager {
 				String actionArea = documentAsString.substring(gmIndex + 11, phoneIndex);
 				List<String> members = new ArrayList<String>();
 				getMembers(actionArea, members);
-				removeExtraSpacesFromMemberNames(members);
 				String companyName = file.getName().replace(".doc", "");
 				companyName = companyName.replace(".DOC", "");
 				addMembers(members, companyName, year);
@@ -216,21 +221,6 @@ public class WordToExcellManager {
 			logger.info("File is not processed because it is not a valid doc file. FileName:" + file.getName());
 		}
 		return isSuccess;
-	}
-
-	private void removeExtraSpacesFromMemberNames(List<String> members) {
-		Iterator<String> memberITerator = members.iterator();
-		List<String> normalizedMembers = new ArrayList<String>();
-		while (memberITerator.hasNext()) {
-			String member = memberITerator.next();
-			String normalizedMember = MainAppUtils.removeExtraSpaceBetweenNames(member);
-			if (!member.equals(normalizedMember)) {
-				memberITerator.remove();
-				normalizedMembers.add(normalizedMember);
-			}
-		}
-		if (normalizedMembers.size() > 0)
-			members.addAll(normalizedMembers);
 	}
 
 	private synchronized void addMembers(List<String> memberName, String company, String year) {
@@ -274,15 +264,9 @@ public class WordToExcellManager {
 				else {
 					if (alphaIndex < betaIndex) {
 						String member = actionArea.substring(alphaIndex + 1, betaIndex + 1);
-						member = member.trim();
-						if (member.length() > 0 && !member.contains("YÖNETİM") && !member.contains("(") && !member.contains("Board") && !member.contains(":") && !member.contains("-")) {
+						member = MainAppUtils.normalizeMemberString(member);
+						if (member.length() > 0) {
 							logger.info("Adding member to members list for created word data. Member name:" + member);
-							try {
-								byte[] utf8Bytes = member.getBytes("UTF-8");
-								logger.info("Adding member to members list for created word data. Member name (UTF-8):" + new String(utf8Bytes, "UTF-8"));
-							} catch (UnsupportedEncodingException e) {
-								logger.error("Member utf-8 conversion error.", e);
-							}
 							members.add(member);
 						}
 						if (betaIndex < actionArea.length() - 1)

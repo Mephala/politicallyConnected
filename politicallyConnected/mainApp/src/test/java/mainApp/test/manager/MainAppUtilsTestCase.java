@@ -29,4 +29,17 @@ public class MainAppUtilsTestCase {
 		assertTrue(processedString.equals("abdurrahman karaibrahimli cunduruluabbas sikmeden durmaz gibi geliyor di mi suzan sabanci dincer ?????? !!!!"));
 	}
 
+	@Test
+	public void testRemovingParanthesisFromMemberNames() {
+		String test1 = "gokhanabi";
+		String processedString = MainAppUtils.removeParanthesis(test1);
+		assertTrue(test1.equals(processedString));
+		String test2 = "gokhanabi(nam - i diger ustad ) ozgozen";
+		processedString = MainAppUtils.removeParanthesis(test2);
+		assertTrue(processedString.equals("gokhanabi ozgozen"));
+		String test3 = "Viliyy solomon (baskan ve vekilli, dev tasakli kurucu uye )";
+		processedString = MainAppUtils.removeParanthesis(test3);
+		assertTrue(processedString.equals("Viliyy solomon "));
+	}
+
 }

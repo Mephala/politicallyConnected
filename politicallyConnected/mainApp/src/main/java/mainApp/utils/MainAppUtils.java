@@ -55,19 +55,50 @@ public class MainAppUtils {
 
 	public static String removeExtraSpaceBetweenNames(String stringWithPotentialExtraNames) {
 		stringWithPotentialExtraNames = stringWithPotentialExtraNames.trim();
-		StringBuilder sb = new StringBuilder();
-		final char space = ' ';
-		char previousChar = stringWithPotentialExtraNames.charAt(0);
-		for (int i = 1; i < stringWithPotentialExtraNames.length(); i++) {
-			char currentChar = stringWithPotentialExtraNames.charAt(i);
-			if (previousChar == space && currentChar == space) {
-				previousChar = currentChar;
-			} else {
-				sb.append(previousChar);
-				previousChar = currentChar;
+		if (stringWithPotentialExtraNames.length() > 1) {
+			StringBuilder sb = new StringBuilder();
+			final char space = ' ';
+			char previousChar = stringWithPotentialExtraNames.charAt(0);
+			for (int i = 1; i < stringWithPotentialExtraNames.length(); i++) {
+				char currentChar = stringWithPotentialExtraNames.charAt(i);
+				if (previousChar == space && currentChar == space) {
+					previousChar = currentChar;
+				} else {
+					sb.append(previousChar);
+					previousChar = currentChar;
+				}
+			}
+			sb.append(previousChar);
+			return sb.toString();
+		} else {
+			return stringWithPotentialExtraNames;
+		}
+	}
+
+	public static String normalizeMemberString(String member) {
+		if (member.equals("."))
+			member = "";
+		member = member.trim();
+		for (String unwantedWord : Constants.nonManagerStrings) {
+			member = member.replaceAll(unwantedWord, "");
+		}
+		member = removeParanthesis(member);
+		member = removeExtraSpaceBetweenNames(member);
+		member = member.trim();
+		return member;
+	}
+
+	public static String removeParanthesis(String member) {
+		int openPIndex = member.indexOf('(');
+		if (openPIndex != -1) {
+			int closePIndex = member.indexOf(')');
+			if (closePIndex != -1) {
+				String unwantedWord = member.substring(openPIndex, closePIndex + 1);
+				member = member.replaceAll(unwantedWord, "");
+				member = member.replaceAll("\\(", "");
+				member = member.replaceAll("\\)", "");
 			}
 		}
-		sb.append(previousChar);
-		return sb.toString();
+		return member;
 	}
 }
