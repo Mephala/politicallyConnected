@@ -20,4 +20,5 @@ class RequestDtoConstants {
 	protected static final String GET_ALL_CITIES_REQUEST_URI = "/getAllCities.do";
 	protected static final String GET_ALL_IMAGE_IDS_URI = "/getAllImageIds.do";
 	protected static final String GET_IMAGE_URI = "/getImage.do";
+	protected static final String SAVE_PCA_PERSON_LIST_REQUEST_URI = "/savePcaPersonList.do";
 }

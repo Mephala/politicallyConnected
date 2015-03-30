@@ -43,5 +43,8 @@
       	<mapping class="serviceprovider.service.address.Ilce"/>
       	<mapping class="serviceprovider.service.address.Semt"/>
       	<mapping class="serviceprovider.service.address.Mahalle"/>
+      	<mapping class="serviceprovider.model.PcaPerson"/>
+      	<mapping class="serviceprovider.model.PcaManagementJob"/>
+      	<mapping class="serviceprovider.model.PcaPoliticalJob"/>
     </session-factory>
 </hibernate-configuration>

@@ -34,6 +34,7 @@ import service.provider.common.request.GetImageRequestDto;
 import service.provider.common.request.LoginUserRequestDto;
 import service.provider.common.request.SaveCategoryRequestDto;
 import service.provider.common.request.SaveConfigurationRequestDto;
+import service.provider.common.request.SavePcaPersonListRequestDto;
 import service.provider.common.request.SaveProviderRequestDto;
 import service.provider.common.request.SaveRemembererRequestDto;
 import service.provider.common.request.SaveSchedulerRequestDto;
@@ -53,6 +54,7 @@ import service.provider.common.response.GetCategoryResponseDto;
 import service.provider.common.response.GetImageResponseDto;
 import service.provider.common.response.LoginUserResponseDto;
 import service.provider.common.response.SaveConfigurationResponseDto;
+import service.provider.common.response.SavePcaPersonListResponseDto;
 import service.provider.common.response.SaveProviderResponseDto;
 import service.provider.common.response.SaveRemembererResponseDto;
 import service.provider.common.response.SaveSchedulerResponseDto;
@@ -103,6 +105,10 @@ public class ServiceClient {
 			System.err.println("Error reading from url:" + e.getMessage());
 		}
 		return fileSize;
+	}
+
+	public static SavePcaPersonListResponseDto savePcaPersonList(SavePcaPersonListRequestDto pcaPersonListSaveRequestDto) {
+		return process(pcaPersonListSaveRequestDto, SavePcaPersonListResponseDto.class, SavePcaPersonListRequestDto.class);
 	}
 
 	public static GetImageResponseDto getImage(GetImageRequestDto getImageRequest) {

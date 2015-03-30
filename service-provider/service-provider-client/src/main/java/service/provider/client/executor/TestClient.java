@@ -32,6 +32,9 @@ import service.provider.common.core.RequestApplication;
 import service.provider.common.dto.CategoryDto;
 import service.provider.common.dto.CityDto;
 import service.provider.common.dto.ConfigurationDto;
+import service.provider.common.dto.ManagementJobDto;
+import service.provider.common.dto.PcaPersonDto;
+import service.provider.common.dto.PoliticalJobDto;
 import service.provider.common.dto.ProviderDto;
 import service.provider.common.dto.RemembererDto;
 import service.provider.common.dto.SchedulerDto;
@@ -50,6 +53,7 @@ import service.provider.common.request.LoginUserRequestDto;
 import service.provider.common.request.RequestDtoFactory;
 import service.provider.common.request.SaveCategoryRequestDto;
 import service.provider.common.request.SaveConfigurationRequestDto;
+import service.provider.common.request.SavePcaPersonListRequestDto;
 import service.provider.common.request.SaveProviderRequestDto;
 import service.provider.common.request.SaveRemembererRequestDto;
 import service.provider.common.request.SaveSchedulerRequestDto;
@@ -66,6 +70,7 @@ import service.provider.common.response.GetAllSchedulersResponseDto;
 import service.provider.common.response.GetCategoryResponseDto;
 import service.provider.common.response.GetImageResponseDto;
 import service.provider.common.response.LoginUserResponseDto;
+import service.provider.common.response.SavePcaPersonListResponseDto;
 import service.provider.common.response.SaveProviderResponseDto;
 import service.provider.common.response.SaveSchedulerResponseDto;
 import service.provider.common.response.SaveUserResponseDto;
@@ -89,7 +94,36 @@ public class TestClient {
 		// testGettingConfigurations();
 		// cryptoTest();
 		// citiesTest();
-		testGettingImage();
+		// testGettingImage();
+		testSavingPcaPersons();
+	}
+
+	private static void testSavingPcaPersons() {
+		SavePcaPersonListRequestDto savePersonsRequest = RequestDtoFactory.createSavePcaPersonListRequestDto(RequestApplication.WEB);
+		PcaPersonDto p = new PcaPersonDto();
+		p.setName("Gökhan  Abi Çöşğüpçİİİ");
+		PoliticalJobDto politicalJob = new PoliticalJobDto();
+		politicalJob.setName("AKP");
+		politicalJob.setYear("2005");
+		ManagementJobDto mDto = new ManagementJobDto();
+		mDto.setName("BYRTA");
+		mDto.setYear("2003");
+		List<ManagementJobDto> managementJobs = new ArrayList<ManagementJobDto>();
+		managementJobs.add(mDto);
+		List<PoliticalJobDto> politicalJobs = new ArrayList<PoliticalJobDto>();
+		politicalJobs.add(politicalJob);
+		p.setManagementJobs(managementJobs);
+		p.setPoliticalJobs(politicalJobs);
+		List<PcaPersonDto> persons = new ArrayList<PcaPersonDto>();
+		persons.add(p);
+		savePersonsRequest.setPersonListToSave(persons);
+		SavePcaPersonListResponseDto response = ServiceClient.savePcaPersonList(savePersonsRequest);
+		mDto = new ManagementJobDto();
+		mDto.setName("ZBYRE");
+		mDto.setYear("1998");
+		managementJobs.add(mDto);
+		response = ServiceClient.savePcaPersonList(savePersonsRequest);
+		System.out.println(response);
 	}
 
 	private static void testGettingImage() throws IOException {
