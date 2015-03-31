@@ -1,8 +1,10 @@
 package serviceprovider.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -22,9 +24,15 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	private static PcaManager instance;
 	private final PcaPersonDAO dao;
 	private Log logger = LogFactory.getLog(getClass());
+	private Map<String, PcaPerson> nameToPersonMap;
+	private Map<String, PcaPoliticalJob> nameToPoliticalJobMap;
+	private Map<String, PcaManagementJob> nameToManagementJobMap;
 
 	private PcaManager() {
 		dao = new PcaPersonDAO();
+		nameToPersonMap = new HashMap<String, PcaPerson>();
+		nameToPoliticalJobMap = new HashMap<>();
+		nameToManagementJobMap = new HashMap<>();
 		initializeDAO(dao);
 	}
 
@@ -77,11 +85,12 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private void mergePoliticalJobs(List<PcaPoliticalJob> politicalJobs, List<PcaPoliticalJob> politicalJobs2) {
-		for (PcaPoliticalJob pcaPoliticalJob : politicalJobs2) {
-			if (!politicalJobs.contains(pcaPoliticalJob))
-				politicalJobs.add(pcaPoliticalJob);
+		if (!CollectionUtils.isEmpty(politicalJobs2)) {
+			for (PcaPoliticalJob pcaPoliticalJob : politicalJobs2) {
+				if (!politicalJobs.contains(pcaPoliticalJob))
+					politicalJobs.add(pcaPoliticalJob);
+			}
 		}
-
 	}
 
 	private void mergeManagementJobs(List<PcaManagementJob> managementJobs, List<PcaManagementJob> managementJobs2) {
@@ -120,11 +129,21 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private PcaPerson converDtoToPerson(PcaPersonDto pDto) {
-		PcaPerson person = new PcaPerson();
-		person.setName(pDto.getName());
+		PcaPerson person = createOrReturnPerson(pDto.getName());
 		person.setManagementJobs(convertManagementJobs(pDto.getManagementJobs()));
 		person.setPoliticalJobs(convertPoliticalJobDtos(pDto.getPoliticalJobs()));
 		return person;
+	}
+
+	private PcaPerson createOrReturnPerson(String name) {
+		if (nameToPersonMap.containsKey(name))
+			return nameToPersonMap.get(name);
+		else {
+			PcaPerson pcaPerson = new PcaPerson();
+			pcaPerson.setName(name);
+			nameToPersonMap.put(name, pcaPerson);
+			return pcaPerson;
+		}
 	}
 
 	private List<PcaPoliticalJob> convertPoliticalJobDtos(List<PoliticalJobDto> politicalJobDtos) {
@@ -139,10 +158,20 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private PcaPoliticalJob convertPoliticalJob(PoliticalJobDto politicalJobDto) {
-		PcaPoliticalJob politicalJob = new PcaPoliticalJob();
-		politicalJob.setName(politicalJobDto.getName());
+		PcaPoliticalJob politicalJob = createOrGetPoliticalJob(politicalJobDto.getName());
 		politicalJob.setYear(politicalJobDto.getYear());
 		return politicalJob;
+	}
+
+	private PcaPoliticalJob createOrGetPoliticalJob(String name) {
+		if (nameToPoliticalJobMap.containsKey(name))
+			return nameToPoliticalJobMap.get(name);
+		else {
+			PcaPoliticalJob pJob = new PcaPoliticalJob();
+			pJob.setName(name);
+			nameToPoliticalJobMap.put(name, pJob);
+			return pJob;
+		}
 	}
 
 	private List<PcaManagementJob> convertManagementJobs(List<ManagementJobDto> managementJobDtos) {
@@ -157,9 +186,20 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private PcaManagementJob convertManagementJob(ManagementJobDto managementJobDto) {
-		PcaManagementJob managementJob = new PcaManagementJob();
+		PcaManagementJob managementJob = createOrGetManagementJob(managementJobDto.getName());
 		managementJob.setName(managementJobDto.getName());
 		managementJob.setYear(managementJobDto.getYear());
 		return managementJob;
+	}
+
+	private PcaManagementJob createOrGetManagementJob(String name) {
+		if (nameToManagementJobMap.containsKey(name)) {
+			return nameToManagementJobMap.get(name);
+		} else {
+			PcaManagementJob mJob = new PcaManagementJob();
+			mJob.setName(name);
+			nameToManagementJobMap.put(name, mJob);
+			return mJob;
+		}
 	}
 }

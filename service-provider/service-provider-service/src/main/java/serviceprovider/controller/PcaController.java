@@ -23,7 +23,7 @@ public class PcaController extends AbstractServiceController {
 	private final Log logger = LogFactory.getLog(getClass());
 	private final PcaManager pcaManager = PcaManager.getInstance();
 
-	@RequestMapping(value = "/savePcaPersonList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/savePcaPersonList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8", consumes = "application/json; charset=utf-8")
 	@ResponseBody
 	public Object savePcaPersonList(HttpServletRequest request, HttpServletResponse response, @RequestBody final SavePcaPersonListRequestDto savePersonListRequest) {
 		logger.info("Saving pca persons upon request:" + savePersonListRequest);
@@ -34,10 +34,10 @@ public class PcaController extends AbstractServiceController {
 			logger.info("Pca persons are saved successfully.");
 			responseDto.setResponseStatus(ResponseStatus.OK);
 		} catch (AbstractServiceException ase) {
-			logger.info("request  encountered serviceException. Exception:" + ase);
+			logger.error("request  encountered serviceException. Exception:" + ase, ase);
 			setMeaningfulException(responseDto, ase);
 		} catch (Exception e) {
-			logger.info("request  encountered serviceException. Exception:" + e);
+			logger.error("request  encountered serviceException. Exception:" + e, e);
 			responseDto.setError("Error occured");
 			responseDto.setResponseStatus(ResponseStatus.ERROR);
 		}

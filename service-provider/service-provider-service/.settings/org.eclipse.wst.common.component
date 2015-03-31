@@ -7,7 +7,7 @@
         <dependent-module archiveName="service-provider-common-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/service-provider-common/service-provider-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <property name="java-output-path" value="/kelepirpc/target/classes"/>
         <property name="context-root" value="/"/>
+        <property name="java-output-path" value="/service-provider-service/target/classes"/>
     </wb-module>
 </project-modules>

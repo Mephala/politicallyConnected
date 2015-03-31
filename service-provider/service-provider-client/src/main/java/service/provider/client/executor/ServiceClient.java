@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -265,11 +266,12 @@ public class ServiceClient {
 		R serviceResponse = null;
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
+			httpClient.getParams().setParameter("http.protocol.content-charset", "UTF-8");
 			ObjectMapper mapper = new ObjectMapper();
 			HttpPost request = new HttpPost(urlRoot + req.getRequestUri());
+			request.addHeader("content-type", "application/json; charset=UTF-8");
 			String jsonConversion = mapper.writeValueAsString(req);
-			StringEntity params = new StringEntity(jsonConversion);
-			request.addHeader("content-type", "application/json");
+			StringEntity params = new StringEntity(jsonConversion, Charset.forName("UTF-8"));
 			request.setEntity(params);
 			Req parserRequest = (Req) mapper.readValue(jsonConversion, requestClass);
 			HttpResponse response = httpClient.execute(request);
