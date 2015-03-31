@@ -53,6 +53,7 @@ public class WordToExcellManager {
 	private final WordToExcelModel model;
 	private Set<Manager> readWordData;
 	private final Log logger = LogFactory.getLog(getClass());
+
 	private final CloudManager cloudManager;
 
 	private WordToExcellManager() {
