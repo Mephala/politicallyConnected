@@ -25,7 +25,7 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 
 	private static PcaManager instance;
 	private final PcaPersonDAO dao;
-	private Log logger = LogFactory.getLog(getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 	private Map<String, PcaPerson> nameToPersonMap;
 	private Map<String, PcaPoliticalJob> nameToPoliticalJobMap;
 	private Map<String, PcaManagementJob> nameToManagementJobMap;
@@ -49,13 +49,13 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 		cachedExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				savePcaListAsync(personListToSave);
+				savePcaList(personListToSave);
 			}
 		});
 
 	}
 
-	public void savePcaList(List<PcaPersonDto> personListToSave) {
+	public synchronized void savePcaList(List<PcaPersonDto> personListToSave) {
 		logger.info("Converting requested person list to model objects...");
 		List<PcaPerson> convertedPcaPersons = convertPcaPersonDtosToModelObjects(personListToSave);
 		logger.info("Fetching persisted person data from database...");
@@ -216,5 +216,67 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 			nameToManagementJobMap.put(name, mJob);
 			return mJob;
 		}
+	}
+
+	public List<PcaPersonDto> covertDbDataToDto() {
+		List<PcaPerson> pcaPersonList = getAllModelList();
+		return convertPcaPersonListToDto(pcaPersonList);
+	}
+
+	private List<PcaPersonDto> convertPcaPersonListToDto(List<PcaPerson> pcaPersonList) {
+		List<PcaPersonDto> convertedList = null;
+		if (!CollectionUtils.isEmpty(pcaPersonList)) {
+			convertedList = new ArrayList<>();
+			for (PcaPerson pcaPerson : pcaPersonList) {
+				convertedList.add(convertPcaPersonToDto(pcaPerson));
+			}
+		}
+		return convertedList;
+	}
+
+	private PcaPersonDto convertPcaPersonToDto(PcaPerson pcaPerson) {
+		PcaPersonDto convertedPersonDto = new PcaPersonDto();
+		List<ManagementJobDto> managementJobDtoList = convertPcaManagementJobsToDto(pcaPerson.getManagementJobs());
+		List<PoliticalJobDto> politicalJobDtoList = convertPoliticalJobsToDto(pcaPerson.getPoliticalJobs());
+		convertedPersonDto.setManagementJobs(managementJobDtoList);
+		convertedPersonDto.setPoliticalJobs(politicalJobDtoList);
+		convertedPersonDto.setName(pcaPerson.getName());
+		return convertedPersonDto;
+	}
+
+	private List<PoliticalJobDto> convertPoliticalJobsToDto(List<PcaPoliticalJob> politicalJobs) {
+		List<PoliticalJobDto> politicalJobDtos = null;
+		if (!CollectionUtils.isEmpty(politicalJobs)) {
+			politicalJobDtos = new ArrayList<>();
+			for (PcaPoliticalJob pJob : politicalJobs) {
+				politicalJobDtos.add(convertPJobToDto(pJob));
+			}
+		}
+		return politicalJobDtos;
+	}
+
+	private PoliticalJobDto convertPJobToDto(PcaPoliticalJob pJob) {
+		PoliticalJobDto pJobDto = new PoliticalJobDto();
+		pJobDto.setName(pJob.getName());
+		pJobDto.setYear(pJob.getYear());
+		return pJobDto;
+	}
+
+	private List<ManagementJobDto> convertPcaManagementJobsToDto(List<PcaManagementJob> managementJobs) {
+		List<ManagementJobDto> managementJobDtos = null;
+		if (!CollectionUtils.isEmpty(managementJobs)) {
+			managementJobDtos = new ArrayList<>();
+			for (PcaManagementJob mJob : managementJobs) {
+				managementJobDtos.add(convertMJobToDto(mJob));
+			}
+		}
+		return managementJobDtos;
+	}
+
+	private ManagementJobDto convertMJobToDto(PcaManagementJob mJob) {
+		ManagementJobDto mJobDto = new ManagementJobDto();
+		mJobDto.setName(mJob.getName());
+		mJobDto.setYear(mJob.getYear());
+		return mJobDto;
 	}
 }

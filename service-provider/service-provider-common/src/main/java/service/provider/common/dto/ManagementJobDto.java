@@ -22,4 +22,9 @@ public class ManagementJobDto {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "ManagementJobDto [year=" + year + ", name=" + name + "]";
+	}
+
 }

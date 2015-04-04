@@ -26,6 +26,7 @@ import service.provider.common.request.GetAllCategoryIdsRequestDto;
 import service.provider.common.request.GetAllCitiesRequestDto;
 import service.provider.common.request.GetAllConfigurationRequestDto;
 import service.provider.common.request.GetAllImageIdsRequestDto;
+import service.provider.common.request.GetAllPcaDataRequestDto;
 import service.provider.common.request.GetAllProvidersRequestDto;
 import service.provider.common.request.GetAllRememberersRequestDto;
 import service.provider.common.request.GetAllSchedulersRequestDto;
@@ -48,6 +49,7 @@ import service.provider.common.response.GetAllCategoryIdsResponseDto;
 import service.provider.common.response.GetAllCitiesResponseDto;
 import service.provider.common.response.GetAllConfigurationResponseDto;
 import service.provider.common.response.GetAllImageIdsResponseDto;
+import service.provider.common.response.GetAllPcaDataResponseDto;
 import service.provider.common.response.GetAllProvidersResponseDto;
 import service.provider.common.response.GetAllRememberersResponseDto;
 import service.provider.common.response.GetAllSchedulersResponseDto;
@@ -65,7 +67,7 @@ public class ServiceClient {
 
 	private static String urlRoot = "http://www.kelepirpc.com/serviceProvider/";
 
-	// private final static String urlRoot = "http://localhost:8080/";
+	// private final static String urlRoot = "http://localhost:8080/"; //local
 
 	public static void initialize(String url) {
 		urlRoot = url;
@@ -106,6 +108,10 @@ public class ServiceClient {
 			System.err.println("Error reading from url:" + e.getMessage());
 		}
 		return fileSize;
+	}
+
+	public static GetAllPcaDataResponseDto getAllPcaDataDto(GetAllPcaDataRequestDto getAllPcaDataRequest) {
+		return process(getAllPcaDataRequest, GetAllPcaDataResponseDto.class, GetAllPcaDataRequestDto.class);
 	}
 
 	public static SavePcaPersonListResponseDto savePcaPersonList(SavePcaPersonListRequestDto pcaPersonListSaveRequestDto) {

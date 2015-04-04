@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import service.provider.common.core.ResponseStatus;
 import service.provider.common.exception.AbstractServiceException;
+import service.provider.common.request.GetAllPcaDataRequestDto;
 import service.provider.common.request.SavePcaPersonListRequestDto;
+import service.provider.common.response.GetAllPcaDataResponseDto;
 import service.provider.common.response.SavePcaPersonListResponseDto;
 import serviceprovider.manager.PcaManager;
 
@@ -32,6 +34,27 @@ public class PcaController extends AbstractServiceController {
 			validateRequest(savePersonListRequest);
 			pcaManager.savePcaListAsync(savePersonListRequest.getPersonListToSave());
 			logger.info("Pca persons are qued for saving successfully.");
+			responseDto.setResponseStatus(ResponseStatus.OK);
+		} catch (AbstractServiceException ase) {
+			logger.error("request  encountered serviceException. Exception:" + ase, ase);
+			setMeaningfulException(responseDto, ase);
+		} catch (Exception e) {
+			logger.error("request  encountered serviceException. Exception:" + e, e);
+			responseDto.setError("Error occured");
+			responseDto.setResponseStatus(ResponseStatus.ERROR);
+		}
+		return responseDto;
+	}
+
+	@RequestMapping(value = "/getAllPcaListDto.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8", consumes = "application/json; charset=utf-8")
+	@ResponseBody
+	public Object getAllPcaDto(HttpServletRequest request, HttpServletResponse response, @RequestBody final GetAllPcaDataRequestDto getAllPcaDataRequest) {
+		logger.info("Getting all pca data and serializing it upon request:" + getAllPcaDataRequest);
+		GetAllPcaDataResponseDto responseDto = new GetAllPcaDataResponseDto();
+		try {
+			validateRequest(getAllPcaDataRequest);
+			responseDto.setAllPersonDtoList(pcaManager.covertDbDataToDto());
+			logger.info("Pca persons are converted to dto successfully.");
 			responseDto.setResponseStatus(ResponseStatus.OK);
 		} catch (AbstractServiceException ase) {
 			logger.error("request  encountered serviceException. Exception:" + ase, ase);

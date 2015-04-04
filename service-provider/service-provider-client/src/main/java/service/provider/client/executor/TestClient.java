@@ -43,6 +43,7 @@ import service.provider.common.request.DeleteSchedulerRequestDto;
 import service.provider.common.request.GetAllCategoryIdsRequestDto;
 import service.provider.common.request.GetAllConfigurationRequestDto;
 import service.provider.common.request.GetAllImageIdsRequestDto;
+import service.provider.common.request.GetAllPcaDataRequestDto;
 import service.provider.common.request.GetAllProvidersRequestDto;
 import service.provider.common.request.GetAllRememberersRequestDto;
 import service.provider.common.request.GetAllSchedulersRequestDto;
@@ -64,6 +65,7 @@ import service.provider.common.response.GetAllAuthorsResponseDto;
 import service.provider.common.response.GetAllCategoryIdsResponseDto;
 import service.provider.common.response.GetAllCitiesResponseDto;
 import service.provider.common.response.GetAllImageIdsResponseDto;
+import service.provider.common.response.GetAllPcaDataResponseDto;
 import service.provider.common.response.GetAllProvidersResponseDto;
 import service.provider.common.response.GetAllRememberersResponseDto;
 import service.provider.common.response.GetAllSchedulersResponseDto;
@@ -96,6 +98,14 @@ public class TestClient {
 		// citiesTest();
 		// testGettingImage();
 		testSavingPcaPersons();
+		testGettingAllPcaPersons();
+	}
+
+	private static void testGettingAllPcaPersons() {
+		GetAllPcaDataRequestDto request = RequestDtoFactory.createGetAllPcaDataRequestDto(RequestApplication.PCA);
+		GetAllPcaDataResponseDto response = ServiceClient.getAllPcaDataDto(request);
+		System.out.println(response);
+		System.out.println(response.getAllPersonDtoList());
 	}
 
 	private static void testSavingPcaPersons() {

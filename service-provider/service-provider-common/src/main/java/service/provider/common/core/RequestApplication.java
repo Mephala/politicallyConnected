@@ -2,6 +2,6 @@ package service.provider.common.core;
 
 public enum RequestApplication {
 
-	WEB;
+	WEB, PCA;
 
 }

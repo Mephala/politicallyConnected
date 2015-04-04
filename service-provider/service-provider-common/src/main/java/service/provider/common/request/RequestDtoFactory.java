@@ -4,6 +4,12 @@ import service.provider.common.core.RequestApplication;
 
 public class RequestDtoFactory {
 
+	public static GetAllPcaDataRequestDto createGetAllPcaDataRequestDto(RequestApplication application) {
+		GetAllPcaDataRequestDto request = new GetAllPcaDataRequestDto(RequestDtoConstants.GET_ALL_PCA_DATA_DTO_URI);
+		request.setRequestApp(application);
+		return request;
+	}
+
 	public static SavePcaPersonListRequestDto createSavePcaPersonListRequestDto(RequestApplication application) {
 		SavePcaPersonListRequestDto request = new SavePcaPersonListRequestDto(RequestDtoConstants.SAVE_PCA_PERSON_LIST_REQUEST_URI);
 		request.setRequestApp(application);

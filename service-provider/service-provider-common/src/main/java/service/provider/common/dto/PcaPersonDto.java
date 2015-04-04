@@ -44,4 +44,9 @@ public class PcaPersonDto {
 		this.politicalJobs = politicalJobs;
 	}
 
+	@Override
+	public String toString() {
+		return "PcaPersonDto [id=" + id + ", name=" + name + ", managementJobs=" + managementJobs + ", politicalJobs=" + politicalJobs + "]";
+	}
+
 }

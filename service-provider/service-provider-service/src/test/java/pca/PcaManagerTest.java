@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import mockit.integration.junit4.JMockit;
 
+import org.apache.axis.utils.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -262,5 +263,27 @@ public class PcaManagerTest {
 		mJob.setName(UUID.randomUUID().toString().substring(0, 5));
 		mJob.setYear(UUID.randomUUID().toString().substring(0, 5));
 		return mJob;
+	}
+
+	@Test
+	public void createAllPcaDtosFromDB() throws DatabaseCorruptedException {
+		Random random = new Random();
+		int totalPcaPersonToSave = (random.nextInt() % 100) + 100;
+		List<PcaPersonDto> pcaListToSave = new ArrayList<>();
+		for (int i = 0; i < totalPcaPersonToSave; i++) {
+			addRandomPcaPersonToList(pcaListToSave);
+		}
+		pcaManager.savePcaList(pcaListToSave);
+		List<PcaPersonDto> allPersonDto = pcaManager.covertDbDataToDto();
+		assertTrue(!CollectionUtils.isEmpty(allPersonDto));
+		for (PcaPersonDto pcaPersonDto : allPersonDto) {
+			assertTrue(!StringUtils.isEmpty(pcaPersonDto.getName()));
+		}
+		List<PcaPerson> convertedPcaPerson = pcaManager.convertPcaPersonDtosToModelObjects(pcaListToSave);
+		for (PcaPerson pcaPerson : convertedPcaPerson) {
+			pcaManager.deleteModel(pcaPerson);
+		}
+		List<PcaPerson> allPersons = pcaManager.getAllModelList();
+		assertTrue(CollectionUtils.isEmpty(allPersons));
 	}
 }

@@ -22,4 +22,9 @@ public class PoliticalJobDto {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "PoliticalJobDto [year=" + year + ", name=" + name + "]";
+	}
+
 }
