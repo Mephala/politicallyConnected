@@ -18,10 +18,10 @@ public class PcaPerson {
 	@Column(name = "NAME", length = 1024)
 	private String name;
 
-	@ManyToMany(cascade = javax.persistence.CascadeType.ALL)
+	@ManyToMany
 	List<PcaManagementJob> managementJobs;
 
-	@ManyToMany(cascade = javax.persistence.CascadeType.ALL)
+	@ManyToMany
 	List<PcaPoliticalJob> politicalJobs;
 
 	public synchronized String getName() {

@@ -30,8 +30,8 @@ public class PcaController extends AbstractServiceController {
 		SavePcaPersonListResponseDto responseDto = new SavePcaPersonListResponseDto();
 		try {
 			validateRequest(savePersonListRequest);
-			pcaManager.savePcaList(savePersonListRequest.getPersonListToSave());
-			logger.info("Pca persons are saved successfully.");
+			pcaManager.savePcaListAsync(savePersonListRequest.getPersonListToSave());
+			logger.info("Pca persons are qued for saving successfully.");
 			responseDto.setResponseStatus(ResponseStatus.OK);
 		} catch (AbstractServiceException ase) {
 			logger.error("request  encountered serviceException. Exception:" + ase, ase);

@@ -48,9 +48,21 @@ public class PcaPersonDAO extends AbstractDAO<PcaPerson> {
 	}
 
 	@Override
-	public void saveModel(PcaPerson model) {
+	public void saveModel(PcaPerson pcaPerson) {
 		Session session = createSessionAndBeginTransaction();
-		session.saveOrUpdate(model);
+		List<PcaManagementJob> managementJobs = pcaPerson.getManagementJobs();
+		List<PcaPoliticalJob> politicalJobs = pcaPerson.getPoliticalJobs();
+		if (!CollectionUtils.isEmpty(politicalJobs)) {
+			for (PcaPoliticalJob pcaPoliticalJob : politicalJobs) {
+				session.saveOrUpdate(pcaPoliticalJob);
+			}
+		}
+		if (!CollectionUtils.isEmpty(managementJobs)) {
+			for (PcaManagementJob managementJob : managementJobs) {
+				session.saveOrUpdate(managementJob);
+			}
+		}
+		session.saveOrUpdate(pcaPerson);
 		commitTransactionAndCloseSession(session);
 	}
 

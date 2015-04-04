@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +29,7 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	private Map<String, PcaPerson> nameToPersonMap;
 	private Map<String, PcaPoliticalJob> nameToPoliticalJobMap;
 	private Map<String, PcaManagementJob> nameToManagementJobMap;
+	private final ExecutorService cachedExecutor = Executors.newCachedThreadPool();
 
 	private PcaManager() {
 		dao = new PcaPersonDAO();
@@ -40,6 +43,16 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 		if (instance == null)
 			instance = new PcaManager();
 		return instance;
+	}
+
+	public void savePcaListAsync(final List<PcaPersonDto> personListToSave) {
+		cachedExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				savePcaListAsync(personListToSave);
+			}
+		});
+
 	}
 
 	public void savePcaList(List<PcaPersonDto> personListToSave) {
@@ -78,9 +91,9 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private void mergePersonDetails(PcaPerson savedPerson, PcaPerson convertedPerson) {
-		List<PcaManagementJob> managementJobs = savedPerson.getManagementJobs();
+		List<PcaManagementJob> savedPersonManagementJobs = savedPerson.getManagementJobs();
 		List<PcaPoliticalJob> politicalJobs = savedPerson.getPoliticalJobs();
-		mergeManagementJobs(managementJobs, convertedPerson.getManagementJobs());
+		mergeManagementJobs(savedPersonManagementJobs, convertedPerson.getManagementJobs());
 		mergePoliticalJobs(politicalJobs, convertedPerson.getPoliticalJobs());
 	}
 
@@ -93,10 +106,12 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 		}
 	}
 
-	private void mergeManagementJobs(List<PcaManagementJob> managementJobs, List<PcaManagementJob> managementJobs2) {
-		for (PcaManagementJob pcaManagementJob : managementJobs2) {
-			if (!managementJobs.contains(pcaManagementJob))
-				managementJobs.add(pcaManagementJob);
+	private void mergeManagementJobs(List<PcaManagementJob> savedPersonManagementJobs, List<PcaManagementJob> convertedPersonManagementJobs) {
+		if (!CollectionUtils.isEmpty(convertedPersonManagementJobs)) {
+			for (PcaManagementJob pcaManagementJob : convertedPersonManagementJobs) {
+				if (!savedPersonManagementJobs.contains(pcaManagementJob))
+					savedPersonManagementJobs.add(pcaManagementJob);
+			}
 		}
 	}
 
@@ -117,7 +132,7 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 		return savedPersonsSet;
 	}
 
-	private List<PcaPerson> convertPcaPersonDtosToModelObjects(List<PcaPersonDto> pcaPersonDtos) {
+	public List<PcaPerson> convertPcaPersonDtosToModelObjects(List<PcaPersonDto> pcaPersonDtos) {
 		List<PcaPerson> pcaPersonList = null;
 		if (!CollectionUtils.isEmpty(pcaPersonDtos)) {
 			pcaPersonList = new ArrayList<PcaPerson>();
