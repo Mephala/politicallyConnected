@@ -37,8 +37,6 @@ public class CloudManager {
 	}
 
 	public void saveToCloud(Set<Manager> readWordData) {
-		// FIXME remove hardcoded url.
-		ServiceClient.initialize("http://localhost:8080/");
 		long start = System.currentTimeMillis();
 		logger.info("Serializing read data to save it over cloud...");
 		List<PcaPersonDto> personDtoList = convertReadDataToSerializableDto(readWordData);
