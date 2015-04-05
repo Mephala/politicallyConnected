@@ -1,41 +1,22 @@
-package serviceprovider.model;
+package serviceprovider.util;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+public final class PcaPair {
 
-@Entity
-public class PcaPoliticalJob {
+	private final String name;
+	private final String year;
 
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	@Column(name = "NAME", length = 128)
-	private String name;
-
-	@Column(name = "YEAR", length = 32)
-	private String year;
+	public PcaPair(String name, String year) {
+		super();
+		this.name = name;
+		this.year = year;
+	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getYear() {
 		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	@Override
@@ -55,7 +36,7 @@ public class PcaPoliticalJob {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PcaPoliticalJob other = (PcaPoliticalJob) obj;
+		PcaPair other = (PcaPair) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -67,6 +48,11 @@ public class PcaPoliticalJob {
 		} else if (!year.equals(other.year))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PcaPair [name=" + name + ", year=" + year + "]";
 	}
 
 }

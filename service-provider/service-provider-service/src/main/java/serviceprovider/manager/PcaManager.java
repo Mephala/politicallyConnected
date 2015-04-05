@@ -16,10 +16,12 @@ import org.springframework.util.CollectionUtils;
 import service.provider.common.dto.ManagementJobDto;
 import service.provider.common.dto.PcaPersonDto;
 import service.provider.common.dto.PoliticalJobDto;
+import service.provider.common.exception.DatabaseCorruptedException;
 import serviceprovider.dao.PcaPersonDAO;
 import serviceprovider.model.PcaManagementJob;
 import serviceprovider.model.PcaPerson;
 import serviceprovider.model.PcaPoliticalJob;
+import serviceprovider.util.PcaPair;
 
 public class PcaManager extends AbstractServiceManager<PcaPerson> {
 
@@ -27,8 +29,8 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	private final PcaPersonDAO dao;
 	private final Log logger = LogFactory.getLog(getClass());
 	private Map<String, PcaPerson> nameToPersonMap;
-	private Map<String, PcaPoliticalJob> nameToPoliticalJobMap;
-	private Map<String, PcaManagementJob> nameToManagementJobMap;
+	private Map<PcaPair, PcaPoliticalJob> nameToPoliticalJobMap;
+	private Map<PcaPair, PcaManagementJob> nameToManagementJobMap;
 	private final ExecutorService cachedExecutor = Executors.newCachedThreadPool();
 
 	private PcaManager() {
@@ -49,7 +51,11 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 		cachedExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				savePcaList(personListToSave);
+				try {
+					savePcaList(personListToSave);
+				} catch (Exception e) {
+					logger.error("Error occured during saving pca data..", e);
+				}
 			}
 		});
 
@@ -173,20 +179,28 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private PcaPoliticalJob convertPoliticalJob(PoliticalJobDto politicalJobDto) {
-		PcaPoliticalJob politicalJob = createOrGetPoliticalJob(politicalJobDto.getName());
+		PcaPair pair = new PcaPair(politicalJobDto.getName(), politicalJobDto.getYear());
+		PcaPoliticalJob politicalJob = createOrGetPoliticalJob(pair);
 		politicalJob.setYear(politicalJobDto.getYear());
 		return politicalJob;
 	}
 
-	private PcaPoliticalJob createOrGetPoliticalJob(String name) {
-		if (nameToPoliticalJobMap.containsKey(name))
-			return nameToPoliticalJobMap.get(name);
+	private PcaPoliticalJob createOrGetPoliticalJob(PcaPair pair) {
+		if (nameToPoliticalJobMap.containsKey(pair))
+			return nameToPoliticalJobMap.get(pair);
 		else {
 			PcaPoliticalJob pJob = new PcaPoliticalJob();
-			pJob.setName(name);
-			nameToPoliticalJobMap.put(name, pJob);
+			pJob.setName(pair.getName());
+			pJob.setYear(pair.getYear());
+			nameToPoliticalJobMap.put(pair, pJob);
 			return pJob;
 		}
+	}
+
+	@Override
+	public void deleteModel(PcaPerson pcaPerson) throws DatabaseCorruptedException {
+		nameToPersonMap.remove(pcaPerson.getName());
+		super.deleteModel(pcaPerson);
 	}
 
 	private List<PcaManagementJob> convertManagementJobs(List<ManagementJobDto> managementJobDtos) {
@@ -201,19 +215,21 @@ public class PcaManager extends AbstractServiceManager<PcaPerson> {
 	}
 
 	private PcaManagementJob convertManagementJob(ManagementJobDto managementJobDto) {
-		PcaManagementJob managementJob = createOrGetManagementJob(managementJobDto.getName());
+		PcaPair pair = new PcaPair(managementJobDto.getName(), managementJobDto.getYear());
+		PcaManagementJob managementJob = createOrGetManagementJob(pair);
 		managementJob.setName(managementJobDto.getName());
 		managementJob.setYear(managementJobDto.getYear());
 		return managementJob;
 	}
 
-	private PcaManagementJob createOrGetManagementJob(String name) {
-		if (nameToManagementJobMap.containsKey(name)) {
-			return nameToManagementJobMap.get(name);
+	private PcaManagementJob createOrGetManagementJob(PcaPair pair) {
+		if (nameToManagementJobMap.containsKey(pair)) {
+			return nameToManagementJobMap.get(pair);
 		} else {
 			PcaManagementJob mJob = new PcaManagementJob();
-			mJob.setName(name);
-			nameToManagementJobMap.put(name, mJob);
+			mJob.setName(pair.getName());
+			mJob.setYear(pair.getYear());
+			nameToManagementJobMap.put(pair, mJob);
 			return mJob;
 		}
 	}

@@ -286,4 +286,73 @@ public class PcaManagerTest {
 		List<PcaPerson> allPersons = pcaManager.getAllModelList();
 		assertTrue(CollectionUtils.isEmpty(allPersons));
 	}
+
+	@Test
+	public void testHavingSameManagementJobDifferentYear() throws DatabaseCorruptedException {
+		List<ManagementJobDto> mList = new ArrayList<>();
+		ManagementJobDto mJob = new ManagementJobDto();
+		mJob.setName("PPPPP");
+		mJob.setYear("1453");
+		PcaPersonDto pDto = new PcaPersonDto();
+		mList.add(mJob);
+		pDto.setManagementJobs(mList);
+		String interestingName = "Mükerrem Şiğürtlüçöşiğ";
+		pDto.setName(interestingName);
+		List<PcaPersonDto> pList = new ArrayList<>();
+		pList.add(pDto);
+		pcaManager.savePcaList(pList);
+		List<PcaPerson> pcaPersonList = pcaManager.getAllModelList();
+		PcaPerson containingPerson = null;
+		boolean containsInterestingName = false;
+		for (PcaPerson pcaPerson : pcaPersonList) {
+			if (interestingName.equals(pcaPerson.getName())) {
+				containsInterestingName = true;
+				containingPerson = pcaPerson;
+				break;
+			}
+		}
+		assertTrue(containsInterestingName);
+		assertTrue(containingPerson != null);
+		List<PcaManagementJob> managementJobs = containingPerson.getManagementJobs();
+		PcaManagementJob pmjob = managementJobs.get(0);
+		assertTrue(pmjob.getName().equals("PPPPP"));
+		assertTrue(pmjob.getYear().equals("1453"));
+		mJob = new ManagementJobDto();
+		mJob.setName("PPPPP");
+		mJob.setYear("1454");
+		mList.add(mJob);
+		pcaManager.savePcaList(pList);
+		pcaPersonList = pcaManager.getAllModelList();
+		containingPerson = null;
+		containsInterestingName = false;
+		for (PcaPerson pcaPerson : pcaPersonList) {
+			if (interestingName.equals(pcaPerson.getName())) {
+				containsInterestingName = true;
+				containingPerson = pcaPerson;
+				break;
+			}
+		}
+		assertTrue(containsInterestingName);
+		assertTrue(containingPerson != null);
+		managementJobs = containingPerson.getManagementJobs();
+		assertTrue(managementJobs.size() == 2);
+		for (PcaManagementJob pcaManagementJob : managementJobs) {
+			boolean turkishShh = pcaManagementJob.getName().equals("PPPPP") && pcaManagementJob.getYear().equals("1454");
+			boolean pppppppp = pcaManagementJob.getName().equals("PPPPP") && pcaManagementJob.getYear().equals("1453");
+			assertTrue(pppppppp || turkishShh);
+		}
+		pcaManager.deleteModel(containingPerson);
+		pcaPersonList = pcaManager.getAllModelList();
+		containingPerson = null;
+		containsInterestingName = false;
+		for (PcaPerson pcaPerson : pcaPersonList) {
+			if (interestingName.equals(pcaPerson.getName())) {
+				containsInterestingName = true;
+				containingPerson = pcaPerson;
+				break;
+			}
+		}
+		assertTrue(!containsInterestingName);
+		assertTrue(containingPerson == null);
+	}
 }

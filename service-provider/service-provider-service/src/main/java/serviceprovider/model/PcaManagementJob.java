@@ -18,23 +18,23 @@ public class PcaManagementJob {
 	@Column(name = "YEAR", length = 32)
 	private String year;
 
-	public synchronized String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public synchronized void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public synchronized String getYear() {
+	public String getYear() {
 		return year;
 	}
 
-	public synchronized void setYear(String year) {
+	public void setYear(String year) {
 		this.year = year;
 	}
 
-	public synchronized Long getId() {
+	public Long getId() {
 		return id;
 	}
 

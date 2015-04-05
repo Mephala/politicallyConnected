@@ -24,31 +24,31 @@ public class PcaPerson {
 	@ManyToMany
 	List<PcaPoliticalJob> politicalJobs;
 
-	public synchronized String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public synchronized void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public synchronized List<PcaManagementJob> getManagementJobs() {
+	public List<PcaManagementJob> getManagementJobs() {
 		return managementJobs;
 	}
 
-	public synchronized void setManagementJobs(List<PcaManagementJob> managementJobs) {
+	public void setManagementJobs(List<PcaManagementJob> managementJobs) {
 		this.managementJobs = managementJobs;
 	}
 
-	public synchronized List<PcaPoliticalJob> getPoliticalJobs() {
+	public List<PcaPoliticalJob> getPoliticalJobs() {
 		return politicalJobs;
 	}
 
-	public synchronized void setPoliticalJobs(List<PcaPoliticalJob> politicalJobs) {
+	public void setPoliticalJobs(List<PcaPoliticalJob> politicalJobs) {
 		this.politicalJobs = politicalJobs;
 	}
 
-	public synchronized Long getId() {
+	public Long getId() {
 		return id;
 	}
 
