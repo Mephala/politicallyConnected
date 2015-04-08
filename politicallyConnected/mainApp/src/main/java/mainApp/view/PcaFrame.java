@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -76,8 +77,12 @@ public class PcaFrame extends JFrame {
 	 */
 	public PcaFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 500);
+		setBounds(100, 100, 550, 550);
+		JTabbedPane tabPane = new JTabbedPane();
 		WordToExcelPanel wtep = WordToExcelPanel.getInstance();
-		add(wtep);
+		tabPane.add("Dökümandan Oluştur", wtep);
+		CreateFromWebPanel cfwp = CreateFromWebPanel.getInstance();
+		tabPane.add("Veritabanindan Oluştur", cfwp);
+		add(tabPane);
 	}
 }

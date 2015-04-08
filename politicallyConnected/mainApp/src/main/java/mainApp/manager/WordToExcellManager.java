@@ -3,18 +3,13 @@ package mainApp.manager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -28,24 +23,18 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
 import mainApp.model.ManagementJob;
-import mainApp.model.ManagementJobComparator;
 import mainApp.model.Manager;
 import mainApp.model.ManagerComparator;
 import mainApp.model.WordToExcelModel;
+import mainApp.utils.ExcelWritingUtils;
 import mainApp.utils.MainAppUtils;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 public class WordToExcellManager {
 
@@ -73,8 +62,8 @@ public class WordToExcellManager {
 	public void createExcel() {
 		readFromWordDocumentsInSelectedFolder();
 		if (MainAppUtils.isCollectionEmpty(readWordData)) {
-			JOptionPane.showMessageDialog(null, "Code:0xA3 . Process edilen dökümanlardan hiç bir kişi - kurum bağlantısı bulunamadı! ---> gokhan.ozgozen@gmail.com",
-					"Veri bulunamadi", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Code:0xA3 . Process edilen dökümanlardan hiç bir kişi - kurum bağlantısı bulunamadı! ---> gokhan.ozgozen@gmail.com", "Veri bulunamadi",
+					JOptionPane.ERROR_MESSAGE);
 		} else {
 			logger.info("Read manager list is the following...");
 			for (Manager manager : readWordData) {
@@ -131,12 +120,10 @@ public class WordToExcellManager {
 					JOptionPane.showMessageDialog(null, "Code:0xA6. Person First excel dosyası oluşturulamadı.", "Hata", JOptionPane.ERROR_MESSAGE);
 			} else {
 				logger.error("Threads are not gracefully terminated. Debug is required.");
-				JOptionPane
-						.showMessageDialog(null, "Code:0xA7. Excel writing thread fault. Contact to Gökhan Özgözen, gokhan.ozgozen@gmail.com", "Hata", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Code:0xA7. Excel writing thread fault. Contact to Gökhan Özgözen, gokhan.ozgozen@gmail.com", "Hata", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA7 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com. Error:" + e.getMessage(), "Big Fault",
-					JOptionPane.ERROR);
+			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA7 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com. Error:" + e.getMessage(), "Big Fault", JOptionPane.ERROR);
 		}
 	}
 
@@ -165,8 +152,8 @@ public class WordToExcellManager {
 			boolean gracefulTermination = cachedThreads.awaitTermination(120, TimeUnit.SECONDS);
 			if (!gracefulTermination)
 				JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA1 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com.", "Big Fault", JOptionPane.ERROR);
-			JOptionPane.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane
+					.showMessageDialog(null, totalFiles + " fıle(s) have been processed in " + (System.currentTimeMillis() - start) + " miliseconds.", "What now ?", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Thread fault. Code:0xA2 Contact to Gökhan özgözen, gokhan.ozgozen@gmail.com.", "Big Fault", JOptionPane.ERROR);
 		}
@@ -300,113 +287,19 @@ public class WordToExcellManager {
 
 	private File writeToExcelPersonFirst() {
 		logger.info("Logging person first company.");
-		Workbook wb = new HSSFWorkbook();
-		logger.info("Person first excel workbook has been created.");
-		// Workbook wb = new XSSFWorkbook();
-		CreationHelper createHelper = wb.getCreationHelper();
 		String sheetName = getSheetNameFromReadWord();
 		String excelName = sheetName + "(ManagerFirst).xls";
-		Sheet sheet = wb.createSheet(sheetName);
-		logger.info("Sheet of person first excel workbook has been created.");
-		int rowCount = 0;
-		logger.info("Reading data structure to create person first excel data.");
 		List<Manager> sortedReadWordData = MainAppUtils.convertSetToSortedList(readWordData, ManagerComparator.COMPARATOR);
-		for (Manager manager : sortedReadWordData) {
-			logger.info("Manager data is being created for person first excel data. Manager:" + manager.getName());
-			Row row = sheet.createRow((short) rowCount);
-			logger.info("Row is created for person first excel data. Manager:" + manager.getName());
-			int rowCellCount = 0;
-			Cell cell = row.createCell(rowCellCount);
-			logger.info("Cell has been initialized for person first excel data. Manager:" + manager.getName());
-			cell.setCellValue(createHelper.createRichTextString(manager.getName()));
-			logger.info("Cell name has been written according to manager for person first excel data. Manager:" + manager.getName());
-			rowCellCount++;
-			Set<ManagementJob> managementJobs = manager.getJobs();
-			for (ManagementJob managementJob : managementJobs) {
-				Cell jobCell = row.createCell(rowCellCount);
-				logger.info("Job cell has been initialized for job:" + managementJob.getName() + ", for person first excel data. Manager:" + manager.getName());
-				jobCell.setCellValue(createHelper.createRichTextString(managementJob.getName()));
-				logger.info("Job cell has been written for job:" + managementJob.getName() + ", for person first excel data. Manager:" + manager.getName());
-				rowCellCount++;
-			}
-			rowCount++;
-			logger.info("Manager row has been created for person first excel data. Manager:" + manager.getName());
-		}
-		logger.info("Data structure has been set to heap memory for person first excel.");
-		// Write the output to a file
-		FileOutputStream fileOut;
-		try {
-			logger.info("Writing data to excel file for person first excel");
-			fileOut = new FileOutputStream(excelName);
-			wb.write(fileOut);
-			fileOut.close();
-			logger.info("Completed writing person first excel file.");
-		} catch (FileNotFoundException e) {
-			System.err.println("Error during excel writing. Err:" + e.getMessage());
-			logger.error("Error occured during creating person first excel document.", e);
-		} catch (IOException e) {
-			System.err.println("Error during excel writing. Err:" + e.getMessage());
-			logger.error("Error occured during creating person first excel document.", e);
-		}
+		ExcelWritingUtils.writePersonFirstExcel(excelName, sheetName, sortedReadWordData);
 		logger.info("Returning created person first excel file for further processing.");
 		return new File(excelName);
 	}
 
 	private File writeToExcelCompanyFirst() {
-		Workbook wb = new HSSFWorkbook();
-		// Workbook wb = new XSSFWorkbook();
-		CreationHelper createHelper = wb.getCreationHelper();
 		String sheetName = getSheetNameFromReadWord();
 		String excelName = sheetName + "(CompanyFirst).xls";
-		Sheet sheet = wb.createSheet(sheetName);
-		Map<ManagementJob, Set<Manager>> managementJobToManagerSetMap = createManagementJobToManagerMap();
-		int rowCount = 0;
-		Set<ManagementJob> companies = managementJobToManagerSetMap.keySet();
-		List<ManagementJob> sortedCompanies = MainAppUtils.convertSetToSortedList(companies, ManagementJobComparator.COMPARATOR);
-		for (ManagementJob managementJob : sortedCompanies) {
-			Row row = sheet.createRow((short) rowCount);
-			int rowCellCount = 0;
-			Cell cell = row.createCell(rowCellCount);
-			cell.setCellValue(createHelper.createRichTextString(managementJob.getName()));
-			rowCellCount++;
-			Set<Manager> managers = managementJobToManagerSetMap.get(managementJob);
-			for (Manager manager : managers) {
-				Cell jobCell = row.createCell(rowCellCount);
-				jobCell.setCellValue(createHelper.createRichTextString(manager.getName()));
-				rowCellCount++;
-			}
-			rowCount++;
-		}
-		// Write the output to a file
-		FileOutputStream fileOut;
-		try {
-			fileOut = new FileOutputStream(excelName);
-			wb.write(fileOut);
-			fileOut.close();
-		} catch (FileNotFoundException e) {
-			System.err.println("Error during excel writing. Err:" + e.getMessage());
-		} catch (IOException e) {
-			System.err.println("Error during excel writing. Err:" + e.getMessage());
-		}
+		ExcelWritingUtils.createCompanyFirstExcel(excelName, sheetName, readWordData);
 		return new File(excelName);
-	}
-
-	private Map<ManagementJob, Set<Manager>> createManagementJobToManagerMap() {
-		Map<ManagementJob, Set<Manager>> jobToManagerMap = new HashMap<ManagementJob, Set<Manager>>();
-		for (Manager manager : readWordData) {
-			Set<ManagementJob> managerJobs = manager.getJobs();
-			for (ManagementJob managementJob : managerJobs) {
-				if (jobToManagerMap.containsKey(managementJob)) {
-					Set<Manager> managerSetToJob = jobToManagerMap.get(managementJob);
-					managerSetToJob.add(manager);
-				} else {
-					Set<Manager> managerSetToJob = new HashSet<Manager>();
-					managerSetToJob.add(manager);
-					jobToManagerMap.put(managementJob, managerSetToJob);
-				}
-			}
-		}
-		return jobToManagerMap;
 	}
 
 	private String getSheetNameFromReadWord() {
