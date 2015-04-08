@@ -290,7 +290,7 @@ public class WordToExcellManager {
 		String sheetName = getSheetNameFromReadWord();
 		String excelName = sheetName + "(ManagerFirst).xls";
 		List<Manager> sortedReadWordData = MainAppUtils.convertSetToSortedList(readWordData, ManagerComparator.COMPARATOR);
-		ExcelWritingUtils.writePersonFirstExcel(excelName, sheetName, sortedReadWordData);
+		ExcelWritingUtils.createPersonFirstExcel(excelName, sheetName, sortedReadWordData);
 		logger.info("Returning created person first excel file for further processing.");
 		return new File(excelName);
 	}

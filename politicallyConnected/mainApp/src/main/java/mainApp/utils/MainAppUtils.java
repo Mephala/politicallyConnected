@@ -5,11 +5,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
+
+import mainApp.model.ManagementJob;
+import mainApp.model.Manager;
+import service.provider.common.dto.ManagementJobDto;
+import service.provider.common.dto.PcaPersonDto;
 
 public class MainAppUtils {
 
@@ -45,10 +51,7 @@ public class MainAppUtils {
 	}
 
 	public static <E> List<E> convertSetToSortedList(Set<E> unsortedSet, Comparator<E> eComparator) {
-		List<E> sortedList = new ArrayList<E>();
-		for (E e : unsortedSet) {
-			sortedList.add(e);
-		}
+		List<E> sortedList = convertSetToList(unsortedSet);
 		Collections.sort(sortedList, eComparator);
 		return sortedList;
 	}
@@ -100,5 +103,54 @@ public class MainAppUtils {
 			}
 		}
 		return member;
+	}
+
+	public static Set<Manager> createManagerList(List<PcaPersonDto> pcaPersonDtoList) {
+		Set<Manager> managerList = new HashSet<Manager>();
+		if (pcaPersonDtoList != null && !pcaPersonDtoList.isEmpty()) {
+			for (PcaPersonDto pcaPersonDto : pcaPersonDtoList) {
+				managerList.add(convertPcaPersonDtoToManager(pcaPersonDto));
+			}
+		}
+		return managerList;
+	}
+
+	private static Manager convertPcaPersonDtoToManager(PcaPersonDto pcaPersonDto) {
+		Manager manager = null;
+		if (pcaPersonDto != null) {
+			manager = new Manager();
+			manager.setName(pcaPersonDto.getName());
+			manager.setJobs(createManagementJobSet(pcaPersonDto.getManagementJobs()));
+		}
+		return manager;
+	}
+
+	private static Set<ManagementJob> createManagementJobSet(List<ManagementJobDto> managementJobDtos) {
+		Set<ManagementJob> managementJobSet = null;
+		if (managementJobDtos != null && !managementJobDtos.isEmpty()) {
+			managementJobSet = new HashSet<ManagementJob>();
+			for (ManagementJobDto mJobDto : managementJobDtos) {
+				managementJobSet.add(convertManagementJobDtoToManagementJob(mJobDto));
+			}
+		}
+		return managementJobSet;
+	}
+
+	private static ManagementJob convertManagementJobDtoToManagementJob(ManagementJobDto mJobDto) {
+		ManagementJob mJob = null;
+		if (mJobDto != null) {
+			mJob = new ManagementJob();
+			mJob.setName(mJobDto.getName());
+			mJob.setYear(mJobDto.getYear());
+		}
+		return mJob;
+	}
+
+	public static <E> List<E> convertSetToList(Set<E> set) {
+		List<E> list = new ArrayList<E>();
+		for (E e : set) {
+			list.add(e);
+		}
+		return list;
 	}
 }

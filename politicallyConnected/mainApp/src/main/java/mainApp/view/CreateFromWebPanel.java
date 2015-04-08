@@ -1,11 +1,13 @@
 package mainApp.view;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -55,7 +57,12 @@ public class CreateFromWebPanel extends JPanel {
 		final JButton btnNewButton = new JButton("Oluştur");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btnNewButton.setEnabled(false);
+				instance.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				c2eManager.writeExcelFileFromCloud(null);
+				btnNewButton.setEnabled(true);
+				instance.setCursor(Cursor.getDefaultCursor());
+				JOptionPane.showMessageDialog(null, "Excel oluşturma işlemi başarılı.", "Asayiş berkemal '", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		btnNewButton.setBounds(199, 448, 91, 23);

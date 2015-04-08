@@ -26,7 +26,7 @@ public class ExcelWritingUtils {
 
 	private final static Log logger = LogFactory.getLog(ExcelWritingUtils.class);
 
-	public static void writePersonFirstExcel(String excelName, String sheetName, List<Manager> sortedManagerList) {
+	public static void createPersonFirstExcel(String excelName, String sheetName, List<Manager> sortedManagerList) {
 		Workbook wb = new HSSFWorkbook();
 		logger.info("Person first excel workbook has been created.");
 		// Workbook wb = new XSSFWorkbook();
