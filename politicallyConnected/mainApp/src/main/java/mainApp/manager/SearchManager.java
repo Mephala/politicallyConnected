@@ -28,8 +28,8 @@ public class SearchManager {
 		logger.info("All data is fetched from cloud, generating hashers...");
 		List<String> allNames = generateManagerNameList(allManagers);
 		List<String> allJobs = generatePoliticalAndManagementJobNameList(allManagers);
-		managerNameHasher = new WordHasher(allNames);
-		jobNameHasher = new WordHasher(allJobs);
+		managerNameHasher = new WordHasher(allNames, 6);
+		jobNameHasher = new WordHasher(allJobs, 6);
 		logger.info("Search manager is initialized in " + (System.currentTimeMillis() - start) + " ms.");
 	}
 

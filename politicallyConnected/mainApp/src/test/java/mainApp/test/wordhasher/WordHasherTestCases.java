@@ -28,7 +28,7 @@ public class WordHasherTestCases {
 		assertTrue(dividedWords.contains("ab"));
 		assertTrue(dividedWords.contains("abc"));
 		assertTrue(dividedWords.contains("bc"));
-		dividedWords = Deencapsulation.invoke(new WordHasher(words), "divideKeyword", "qwertyuo");
+		dividedWords = Deencapsulation.invoke(new WordHasher(words, 8), "divideKeyword", "qwertyuo");
 		assertTrue(dividedWords.contains("qwe"));
 		assertTrue(dividedWords.contains("ert"));
 		assertTrue(dividedWords.contains("yuo"));
