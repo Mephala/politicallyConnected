@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -20,6 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import mainApp.manager.SearchManager;
+import mainApp.utils.MainAppUtils;
 
 @SuppressWarnings("serial")
 public class SearchPcaDataView extends JPanel {
@@ -28,7 +30,7 @@ public class SearchPcaDataView extends JPanel {
 	private JTextField jobNameField;
 	private SearchManager searchManager = SearchManager.getInstance();
 	private final JTextArea searchResultArea;
-	private ExecutorService searchViewExecutors = Executors.newFixedThreadPool(4);
+	private ExecutorService searchViewExecutors = Executors.newFixedThreadPool(5);
 
 	public static synchronized SearchPcaDataView getInstance() {
 		if (instance == null)
@@ -41,93 +43,119 @@ public class SearchPcaDataView extends JPanel {
 	 */
 	private SearchPcaDataView() {
 		setLayout(null);
+		this.searchResultArea = new JTextArea();
+		this.personNameField = new JTextField();
 
-		personNameField = new JTextField();
-		personNameField.setBounds(237, 38, 233, 20);
-		personNameField.setColumns(10);
-		add(personNameField);
-		JLabel lblVeritabanndaArama = new JLabel("Veritabanında Arama");
-		lblVeritabanndaArama.setHorizontalAlignment(SwingConstants.CENTER);
-		lblVeritabanndaArama.setBounds(120, 11, 214, 14);
-		add(lblVeritabanndaArama);
-		JLabel lblNewLabel = new JLabel("Kişi Adı");
-		lblNewLabel.setBounds(10, 41, 139, 14);
-		add(lblNewLabel);
-		JLabel lblNewLabel_1 = new JLabel("Parti ya da Kurum Adı");
-		lblNewLabel_1.setBounds(10, 93, 139, 14);
-		add(lblNewLabel_1);
-		jobNameField = new JTextField();
-		jobNameField.setBounds(237, 90, 233, 20);
-		add(jobNameField);
-		jobNameField.setColumns(10);
+		Icon loadingIcon = MainAppUtils.createImageIcon("/loading.gif", "Masrik");
 
-		JLabel lblNewLabel_2 = new JLabel("Sonuçlar");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setBounds(171, 162, 109, 14);
-		add(lblNewLabel_2);
+		final JLabel imageLbl = new JLabel(loadingIcon);
+		imageLbl.setBounds(35, 63, 397, 391);
+		add(imageLbl);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 204, 448, 265);
-		add(scrollPane);
-
-		searchResultArea = new JTextArea();
-		Font font = new Font("Verdana", Font.BOLD, 12);
-		searchResultArea.setFont(font);
-		searchResultArea.setForeground(Color.BLUE);
-		scrollPane.setViewportView(searchResultArea);
+		final JLabel lblLargeAmountOf = new JLabel("Large amount of data is being indexed....");
+		lblLargeAmountOf.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLargeAmountOf.setBounds(35, 27, 373, 14);
+		add(lblLargeAmountOf);
 		searchViewExecutors.submit(new Runnable() {
+
 			public void run() {
-				jobNameField.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						printResults();
-					}
-				});
-			}
-		});
-		searchViewExecutors.submit(new Runnable() {
-			public void run() {
-				personNameField.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						printResults();
-					}
-				});
-			}
-		});
-		searchViewExecutors.submit(new Runnable() {
-			public void run() {
-				personNameField.getDocument().addDocumentListener(new DocumentListener() {
+				try {
+					while (!searchManager.isConstructed())
+						// busy wait.
+						;
+					instance.removeAll();
+					personNameField.setBounds(237, 38, 233, 20);
+					personNameField.setColumns(10);
+					add(personNameField);
+					JLabel lblVeritabanndaArama = new JLabel("Veritabanında Arama");
+					lblVeritabanndaArama.setHorizontalAlignment(SwingConstants.CENTER);
+					lblVeritabanndaArama.setBounds(120, 11, 214, 14);
+					add(lblVeritabanndaArama);
+					JLabel lblNewLabel = new JLabel("Kişi Adı");
+					lblNewLabel.setBounds(10, 41, 139, 14);
+					add(lblNewLabel);
+					JLabel lblNewLabel_1 = new JLabel("Parti ya da Kurum Adı");
+					lblNewLabel_1.setBounds(10, 93, 139, 14);
+					add(lblNewLabel_1);
+					jobNameField = new JTextField();
+					jobNameField.setBounds(237, 90, 233, 20);
+					add(jobNameField);
+					jobNameField.setColumns(10);
 
-					public void removeUpdate(DocumentEvent e) {
-						showPopUpForPersonName();
+					JLabel lblNewLabel_2 = new JLabel("Sonuçlar");
+					lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+					lblNewLabel_2.setBounds(171, 162, 109, 14);
+					add(lblNewLabel_2);
 
-					}
+					JScrollPane scrollPane = new JScrollPane();
+					scrollPane.setBounds(10, 204, 448, 265);
+					add(scrollPane);
 
-					public void insertUpdate(DocumentEvent e) {
-						showPopUpForPersonName();
-					}
+					Font font = new Font("Verdana", Font.BOLD, 12);
+					searchResultArea.setFont(font);
+					searchResultArea.setForeground(Color.BLUE);
+					scrollPane.setViewportView(searchResultArea);
 
-					public void changedUpdate(DocumentEvent e) {
-						showPopUpForPersonName();
-					}
-				});
-			}
-		});
-		searchViewExecutors.submit(new Runnable() {
-			public void run() {
-				jobNameField.getDocument().addDocumentListener(new DocumentListener() {
+					searchViewExecutors.submit(new Runnable() {
+						public void run() {
+							jobNameField.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									printResults();
+								}
+							});
+						}
+					});
+					searchViewExecutors.submit(new Runnable() {
+						public void run() {
+							personNameField.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									printResults();
+								}
+							});
+						}
+					});
+					searchViewExecutors.submit(new Runnable() {
+						public void run() {
+							personNameField.getDocument().addDocumentListener(new DocumentListener() {
 
-					public void removeUpdate(DocumentEvent e) {
-						showPopUpForJobName();
-					}
+								public void removeUpdate(DocumentEvent e) {
+									showPopUpForPersonName();
 
-					public void insertUpdate(DocumentEvent e) {
-						showPopUpForJobName();
-					}
+								}
 
-					public void changedUpdate(DocumentEvent e) {
-						showPopUpForJobName();
-					}
-				});
+								public void insertUpdate(DocumentEvent e) {
+									showPopUpForPersonName();
+								}
+
+								public void changedUpdate(DocumentEvent e) {
+									showPopUpForPersonName();
+								}
+							});
+						}
+					});
+					searchViewExecutors.submit(new Runnable() {
+						public void run() {
+							jobNameField.getDocument().addDocumentListener(new DocumentListener() {
+
+								public void removeUpdate(DocumentEvent e) {
+									showPopUpForJobName();
+								}
+
+								public void insertUpdate(DocumentEvent e) {
+									showPopUpForJobName();
+								}
+
+								public void changedUpdate(DocumentEvent e) {
+									showPopUpForJobName();
+								}
+							});
+						}
+					});
+				} catch (Exception e) {
+
+				} finally {
+					instance.repaint();
+				}
 			}
 		});
 	}
@@ -137,6 +165,7 @@ public class SearchPcaDataView extends JPanel {
 		String writtenText = personNameField.getText();
 		if (writtenText != null && writtenText.length() > 0) {
 			final JPopupMenu popMenu = new JPopupMenu();
+			popMenu.setFocusable(false);
 			List<String> searchResults = searchManager.popupSearchForPerson(writtenText);
 			for (final String sResult : searchResults) {
 				JMenuItem jmenuItem = new JMenuItem(sResult);
@@ -156,6 +185,7 @@ public class SearchPcaDataView extends JPanel {
 		String writtenText = jobNameField.getText();
 		if (writtenText != null && writtenText.length() > 0) {
 			final JPopupMenu popMenu = new JPopupMenu();
+			popMenu.setFocusable(false);
 			List<String> searchResults = searchManager.popupSearchForJob(writtenText);
 			for (final String sResult : searchResults) {
 				JMenuItem jmenuItem = new JMenuItem(sResult);

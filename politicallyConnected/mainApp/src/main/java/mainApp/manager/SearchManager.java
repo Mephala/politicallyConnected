@@ -3,6 +3,8 @@ package mainApp.manager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mainApp.ApplicationConstants;
 import mainApp.model.ManagementJob;
@@ -19,18 +21,34 @@ public class SearchManager {
 	private WordHasher jobNameHasher;
 	private CloudManager cloudManager;
 	private final Log logger = LogFactory.getLog(getClass());
+	private final ExecutorService constructionExecution = Executors.newFixedThreadPool(1);
 
 	private SearchManager() {
-		long start = System.currentTimeMillis();
-		logger.info("Initializing search manager...");
-		cloudManager = CloudManager.getInstance();
-		List<Manager> allManagers = cloudManager.getAllManagerDataFromCloud();
-		logger.info("All data is fetched from cloud, generating hashers...");
-		List<String> allNames = generateManagerNameList(allManagers);
-		List<String> allJobs = generatePoliticalAndManagementJobNameList(allManagers);
-		managerNameHasher = new WordHasher(allNames, 6);
-		jobNameHasher = new WordHasher(allJobs, 6);
-		logger.info("Search manager is initialized in " + (System.currentTimeMillis() - start) + " ms.");
+		constructionExecution.submit(new Runnable() {
+
+			public void run() {
+				try {
+					long start = System.currentTimeMillis();
+					logger.info("Initializing search manager...");
+					cloudManager = CloudManager.getInstance();
+					List<Manager> allManagers = cloudManager.getAllManagerDataFromCloud();
+					logger.info("All data is fetched from cloud, generating hashers...");
+					List<String> allNames = generateManagerNameList(allManagers);
+					List<String> allJobs = generatePoliticalAndManagementJobNameList(allManagers);
+					managerNameHasher = new WordHasher(allNames, 7);
+					jobNameHasher = new WordHasher(allJobs, 7);
+					logger.info("Search manager is initialized in " + (System.currentTimeMillis() - start) + " ms.");
+				} finally {
+					logger.info("Search Manager construction executor service is completed.");
+					constructionExecution.shutdown(); // weird call.
+				}
+			}
+		});
+
+	}
+
+	public boolean isConstructed() {
+		return constructionExecution.isTerminated();
 	}
 
 	private List<String> generateManagerNameList(List<Manager> allManagers) {
