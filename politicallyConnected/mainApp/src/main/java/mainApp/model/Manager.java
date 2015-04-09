@@ -6,6 +6,7 @@ public class Manager {
 
 	private String name;
 	private Set<ManagementJob> jobs;
+	private Set<PoliticalJob> pJobs;
 
 	public synchronized String getName() {
 		return name;
@@ -51,6 +52,14 @@ public class Manager {
 	@Override
 	public String toString() {
 		return "Manager [name=" + name + ", jobs=" + jobs + "] \n";
+	}
+
+	public synchronized Set<PoliticalJob> getpJobs() {
+		return pJobs;
+	}
+
+	public synchronized void setpJobs(Set<PoliticalJob> pJobs) {
+		this.pJobs = pJobs;
 	}
 
 }

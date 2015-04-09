@@ -83,6 +83,10 @@ public class PcaFrame extends JFrame {
 		tabPane.add("Dökümandan Oluştur", wtep);
 		CreateFromWebPanel cfwp = CreateFromWebPanel.getInstance();
 		tabPane.add("Veritabanindan Oluştur", cfwp);
+		UploadManagerView uploadManagerView = UploadManagerView.getInstance();
+		tabPane.add("Manual Upload", uploadManagerView);
+		SearchPcaDataView searchView = SearchPcaDataView.getInstance();
+		tabPane.add("Arama", searchView);
 		add(tabPane);
 	}
 }
