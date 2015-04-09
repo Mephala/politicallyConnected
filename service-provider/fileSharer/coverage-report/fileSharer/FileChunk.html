@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JMockit Coverage Report - FileChunk.java</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  <link rel='stylesheet' type='text/css' href='../coverage.css'/>
+  <link rel='shortcut icon' type='image/png' href='../logo.png'/>
+  <script type='text/javascript' src='../coverage.js'></script>
+  <script type='text/javascript' src='../prettify.js'></script>
+</head>
+<body onload='prettyPrint()'>
+  <table cellpadding='0' cellspacing='1'>
+    <caption>fileSharer\src\main\java\fileSharer\FileChunk.java</caption>
+    <tr>
+      <td class='line'>1</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>package fileSharer;</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>3</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>public class FileChunk {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>4</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	private int[] <span class='instance covered' title='Reads: 30091479 Writes: 4'>fileData</span>;</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>6</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l6s0'>	public FileChunk() {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>7</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l7s0'>		fileData = new int[ApplicationConstants.TOTAL_INTEGER_PER_CHUNK];</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>8</td><td class='count'>4</td>
+      <td><pre class='prettyprint covered' id='l8s0'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>10</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public void write(int loc, int data) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>11</td><td class='count'>52781</td>
+      <td><pre class='prettyprint covered' id='l11s0'>		fileData[loc] = data;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>12</td><td class='count'>52781</td>
+      <td><pre class='prettyprint covered' id='l12s0'>	}</pre></td>
+    </tr>
+    <tr><td class='line'></td><td colspan='2'>&nbsp;</td></tr>
+    <tr>
+      <td class='line'>14</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	public int[] getNormalizedData() {</pre></td>
+    </tr>
+    <tr>
+      <td></td><td class='count'>0</td>
+      <td class='paths'>
+        <span style='cursor:default; background-color:#ff0000' onclick='hidePath()'>Path coverage: 0/5</span>
+        <span class='uncovered' onclick="showPath(this,'l15s0 l17s0 l20s0 l21s1 l25s0 l28s0 l16s1 l31s0 l32s0 l35s0')">A: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l15s0 l17s0 l20s0 l21s1 l25s0 l26s0 l31s0 l32s0 l35s0')">B: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l15s0 l17s0 l20s0 l21s1 l21s2 l25s0 l28s0 l16s1 l31s0 l32s0 l35s0')">C: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l15s0 l17s0 l20s0 l21s1 l21s2 l25s0 l26s0 l31s0 l32s0 l35s0')">D: 0</span>
+        <span class='uncovered' onclick="showPath(this,'l15s0 l17s0 l18s0 l16s1 l31s0 l32s0 l35s0')">E: 0</span>
+      </td>
+    </tr>
+    <tr>
+      <td class='line'>15</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered' id='l15s0'>		int notNullCount = 0;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>16</td><td class='count'>31810</td>
+      <td><pre class='prettyprint covered' id='l16s0'>		for (int i = 0; i &lt; fileData.length; i++) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>17</td><td class='count'>31810</td>
+      <td><pre class='prettyprint jmp'>			<span id='l17s0' title='Executions: 31810' class='covered'>if (fileData[i] != 0)</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>18</td><td class='count'>31185</td>
+      <td><pre class='prettyprint covered' id='l18s0'>				notNullCount++;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>19</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			else {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>20</td><td class='count'>625</td>
+      <td><pre class='prettyprint covered' id='l20s0'>				boolean hasNonNull = false;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>21</td><td class='count'>14971948</td>
+      <td><pre class='prettyprint jmp'>				<span id='l21s0' title='Executions: 14971948' class='covered'>for (int j = i; j &lt; fileData.length</span> && <span id='l21s1' title='Executions: 14971945' class='covered'>!hasNonNull; j++)</span> </pre></td>
+    </tr>
+    <tr>
+      <td class='line'>22</td><td class='count'>14971323</td>
+      <td><pre class='prettyprint jmp'>					<span id='l22s0' title='Executions: 14971323' class='covered'>if (fileData[j] != 0)</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>23</td><td class='count'>622</td>
+      <td><pre class='prettyprint covered' id='l23s0'>						hasNonNull = true;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>24</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>				}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>25</td><td class='count'>625</td>
+      <td><pre class='prettyprint jmp'>				<span id='l25s0' title='Executions: 625' class='covered'>if (!hasNonNull)</span></pre></td>
+    </tr>
+    <tr>
+      <td class='line'>26</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered' id='l26s0'>					break;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>27</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>				else</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>28</td><td class='count'>622</td>
+      <td><pre class='prettyprint covered' id='l28s0'>					notNullCount++;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>29</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>			}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>30</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>31</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered' id='l31s0'>		int[] retVal = new int[notNullCount];</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>32</td><td class='count'>31810</td>
+      <td><pre class='prettyprint covered' id='l32s0'>		for (int i = 0; i &lt; retVal.length; i++) {</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>33</td><td class='count'>31807</td>
+      <td><pre class='prettyprint covered' id='l33s0'>			retVal[i] = fileData[i];</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>34</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>		}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>35</td><td class='count'>3</td>
+      <td><pre class='prettyprint covered' id='l35s0'>		return retVal;</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>36</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>	}</pre></td>
+    </tr>
+    <tr>
+      <td class='line'>37</td><td>&nbsp;</td>
+      <td><pre class='prettyprint'>}</pre></td>
+    </tr>
+  </table>
+</body>
+</html>

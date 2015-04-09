@@ -1,0 +1,38 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+  
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/kelepirp_service?autoReconnect=true&amp;useUnicode=true&amp;createDatabaseIfNotExist=true&amp;characterEncoding=utf-8</property>
+        <property name="connection.username">kelepirp_root</property>
+        <property name="connection.password">32167bbbbbbbbb</property>
+         
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">1</property>
+         
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        
+        <property name="hibernate.connection.CharSet">utf8</property>
+        <property name="hibernate.connection.characterEncoding">utf8</property>
+        <property name="hibernate.connection.useUnicode">true</property>
+ 
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+        <!-- Disable the second-level cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+         
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property>
+         
+        <property name="hbm2ddl.auto">update</property>
+  
+        <mapping class="serviceprovider.model.User"/>
+      	<mapping class="serviceprovider.model.Provider"/>
+      	<mapping class="serviceprovider.model.Category"/>
+      	<mapping class="serviceprovider.model.Rememberer"/>
+    </session-factory>
+</hibernate-configuration>
