@@ -10,10 +10,11 @@ import mainApp.ApplicationConstants;
 import mainApp.model.ManagementJob;
 import mainApp.model.Manager;
 import mainApp.model.PoliticalJob;
-import mainApp.wordhash.WordHasher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.gokhanozg.wordhasher.WordHasher;
 
 public class SearchManager {
 	private static SearchManager instance;
