@@ -4,8 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
@@ -16,6 +18,7 @@ import mockit.Deencapsulation;
 import mockit.integration.junit4.JMockit;
 
 import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JMockit.class)
@@ -95,6 +98,30 @@ public class WordToExcelManagerTestCase {
 		assertTrue(success == 0);
 		boolean deleteFile = createdExcelFile.delete();
 		assertTrue(deleteFile);
+	}
+
+	@Test(timeout = 3000)
+	public void speedTest() {
+		Locale l = new Locale("TR", "tr");
+		int limit = 1000000;
+		for (int i = 0; i < limit; i++) {
+			String s1 = UUID.randomUUID().toString();
+			String s2 = UUID.randomUUID().toString();
+			s1 = s1.toLowerCase(l);
+			s2 = s2.toLowerCase(l);
+			s1.contains(s2);
+		}
+	}
+
+	@Test(timeout = 3000)
+	public void speedTest2() {
+		Locale l = new Locale("TR", "tr");
+		int limit = 1000000;
+		for (int i = 0; i < limit; i++) {
+			String s1 = UUID.randomUUID().toString();
+			String s2 = UUID.randomUUID().toString();
+			s1.contains(s2);
+		}
 	}
 
 }
