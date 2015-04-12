@@ -12,6 +12,7 @@ import java.util.Set;
 import mainApp.model.ManagementJob;
 import mainApp.model.ManagementJobComparator;
 import mainApp.model.Manager;
+import mainApp.model.PoliticalJob;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -128,4 +129,45 @@ public class ExcelWritingUtils {
 		return jobToManagerMap;
 	}
 
+	public static void createMergedDataExcel(Set<Manager> managerList) {
+		logger.info("Writing merged manager set to excel.");
+		Workbook wb = new HSSFWorkbook();
+		// Workbook wb = new XSSFWorkbook();
+		CreationHelper createHelper = wb.getCreationHelper();
+		Sheet sheet = wb.createSheet("MergedExcel");
+		int rowCount = 0;
+		for (Manager manager : managerList) {
+			Row row = sheet.createRow((short) rowCount);
+			int rowCellCount = 0;
+			Cell cell = row.createCell(rowCellCount);
+			cell.setCellValue(createHelper.createRichTextString(manager.getName()));
+			rowCellCount++;
+			Set<ManagementJob> mJobs = manager.getJobs();
+			StringBuilder sb = new StringBuilder();
+			for (ManagementJob mJob : mJobs) {
+				sb.append(mJob.getName() + " - " + mJob.getYear() + System.lineSeparator());
+			}
+			Cell jobCell = row.createCell(rowCellCount);
+			jobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
+			rowCount++;
+			Set<PoliticalJob> pJobs = manager.getpJobs();
+			sb = new StringBuilder();
+			for (PoliticalJob politicalJob : pJobs) {
+				sb.append(politicalJob.getName() + " - " + politicalJob.getYear() + System.lineSeparator());
+			}
+			Cell pJobCell = row.createCell(rowCellCount);
+			pJobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
+		}
+		// Write the output to a file
+		FileOutputStream fileOut;
+		try {
+			fileOut = new FileOutputStream("AllDataMerged.xls");
+			wb.write(fileOut);
+			fileOut.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Error during excel writing. Err:" + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Error during excel writing. Err:" + e.getMessage());
+		}
+	}
 }

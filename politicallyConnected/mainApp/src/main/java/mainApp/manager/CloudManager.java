@@ -50,7 +50,8 @@ public class CloudManager {
 		savePersonRequest.setPersonListToSave(personDtoList);
 		logger.info("Sending save request to server...");
 		SavePcaPersonListResponseDto response = ServiceClient.savePcaPersonList(savePersonRequest);
-		logger.info("Save request is finished with server response. Response:" + response + " total elapsed time to save data to cloud :" + (System.currentTimeMillis() - start) + " ms.");
+		logger.info("Save request is finished with server response. Response:" + response + " total elapsed time to save data to cloud :" + (System.currentTimeMillis() - start)
+				+ " ms.");
 		if (response == null || !ResponseStatus.OK.equals(response.getResponseStatus())) {
 			String errorMsg = "Server is not responding!";
 			if (response != null)
@@ -74,17 +75,21 @@ public class CloudManager {
 		person.setName(manager.getName());
 		Set<ManagementJob> jobs = manager.getJobs();
 		List<ManagementJobDto> managementJobDto = new ArrayList<ManagementJobDto>();
-		for (ManagementJob managementJob : jobs) {
-			ManagementJobDto mDto = new ManagementJobDto();
-			mDto.setName(managementJob.getName());
-			mDto.setYear(managementJob.getYear());
-			managementJobDto.add(mDto);
+		if (jobs != null) {
+			for (ManagementJob managementJob : jobs) {
+				ManagementJobDto mDto = new ManagementJobDto();
+				mDto.setName(managementJob.getName());
+				mDto.setYear(managementJob.getYear());
+				managementJobDto.add(mDto);
+			}
 		}
 		person.setManagementJobs(managementJobDto);
 		Set<PoliticalJob> pJobs = manager.getpJobs();
 		List<PoliticalJobDto> pJobDtos = new ArrayList<PoliticalJobDto>();
-		for (PoliticalJob politicalJob : pJobs) {
-			pJobDtos.add(convertPoliticalJobToDto(politicalJob));
+		if (pJobs != null) {
+			for (PoliticalJob politicalJob : pJobs) {
+				pJobDtos.add(convertPoliticalJobToDto(politicalJob));
+			}
 		}
 		person.setPoliticalJobs(pJobDtos);
 		return person;

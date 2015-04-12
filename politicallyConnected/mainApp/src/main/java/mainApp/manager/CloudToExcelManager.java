@@ -48,4 +48,16 @@ public class CloudToExcelManager {
 		ExcelWritingUtils.createCompanyFirstExcel(companyFirstExcelName, companyFirstSheetName, managerList);
 		ExcelWritingUtils.createPersonFirstExcel(personFirstExcelName, personFirstSheetName, MainAppUtils.convertSetToList(managerList));
 	}
+
+	public void writeExcelFileFromCloudForMergedData() {
+		logger.info("Creating excel file for merged data...");
+		long start = System.currentTimeMillis();
+		GetAllPcaDataRequestDto request = RequestDtoFactory.createMergedPcaDataRequestDto(RequestApplication.PCA);
+		GetAllPcaDataResponseDto response = ServiceClient.getAllPcaDataDto(request);
+		logger.info("All merged cloud data has been received after " + (System.currentTimeMillis() - start) + " ,ms.");
+		List<PcaPersonDto> pcaPersonDtoList = response.getAllPersonDtoList();
+		Set<Manager> managerList = MainAppUtils.createManagerList(pcaPersonDtoList);
+		ExcelWritingUtils.createMergedDataExcel(managerList);
+
+	}
 }
