@@ -48,6 +48,7 @@ public class PandMAnalyzerView extends JPanel {
 				instance.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				c2eManager.writeExcelFileFromCloudForMergedData();
 				JOptionPane.showMessageDialog(null, "Merged data is created as excel file succesfully.", "Success.", JOptionPane.INFORMATION_MESSAGE);
+				instance.setCursor(Cursor.getDefaultCursor());
 			}
 		});
 		btnNewButton.setBounds(105, 443, 295, 25);
