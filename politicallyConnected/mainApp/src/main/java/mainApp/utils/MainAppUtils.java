@@ -14,8 +14,10 @@ import javax.swing.ImageIcon;
 
 import mainApp.model.ManagementJob;
 import mainApp.model.Manager;
+import mainApp.model.PoliticalJob;
 import service.provider.common.dto.ManagementJobDto;
 import service.provider.common.dto.PcaPersonDto;
+import service.provider.common.dto.PoliticalJobDto;
 
 public class MainAppUtils {
 
@@ -121,8 +123,26 @@ public class MainAppUtils {
 			manager = new Manager();
 			manager.setName(pcaPersonDto.getName());
 			manager.setJobs(createManagementJobSet(pcaPersonDto.getManagementJobs()));
+			manager.setpJobs(createPoliticalJobSet(pcaPersonDto.getPoliticalJobs()));
 		}
 		return manager;
+	}
+
+	private static Set<PoliticalJob> createPoliticalJobSet(List<PoliticalJobDto> politicalJobs) {
+		Set<PoliticalJob> politicalJobSet = null;
+		if (politicalJobs != null && !politicalJobs.isEmpty()) {
+			politicalJobSet = new HashSet<PoliticalJob>();
+			for (PoliticalJobDto pJobDto : politicalJobs) {
+				politicalJobSet.add(convertPoliticalJobDtoToPoliticalJob(pJobDto));
+			}
+		}
+		return politicalJobSet;
+	}
+
+	private static PoliticalJob convertPoliticalJobDtoToPoliticalJob(PoliticalJobDto pJobDto) {
+		if (pJobDto == null)
+			return null;
+		return new PoliticalJob(pJobDto.getName(), pJobDto.getYear());
 	}
 
 	private static Set<ManagementJob> createManagementJobSet(List<ManagementJobDto> managementJobDtos) {

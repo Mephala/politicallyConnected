@@ -87,6 +87,8 @@ public class PcaFrame extends JFrame {
 		tabPane.add("Manual Upload", uploadManagerView);
 		SearchPcaDataView searchView = SearchPcaDataView.getInstance();
 		tabPane.add("Arama", searchView);
+		PandMAnalyzerView pAndManalyzerView = PandMAnalyzerView.getInstance();
+		tabPane.add("Merging", pAndManalyzerView);
 		add(tabPane);
 	}
 }
