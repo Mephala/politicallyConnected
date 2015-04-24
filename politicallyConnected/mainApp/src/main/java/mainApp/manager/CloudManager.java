@@ -33,7 +33,7 @@ public class CloudManager {
 
 	private CloudManager() {
 		logger.info("Initializing cloud manager...");
-		ServiceClient.initialize("http://localhost:8080/");
+		// ServiceClient.initialize("http://localhost:8080/");
 	}
 
 	public static synchronized CloudManager getInstance() {
