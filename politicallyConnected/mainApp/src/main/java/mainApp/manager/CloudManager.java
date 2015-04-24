@@ -33,6 +33,7 @@ public class CloudManager {
 
 	private CloudManager() {
 		logger.info("Initializing cloud manager...");
+		ServiceClient.initialize("http://localhost:8080/");
 	}
 
 	public static synchronized CloudManager getInstance() {
@@ -50,8 +51,7 @@ public class CloudManager {
 		savePersonRequest.setPersonListToSave(personDtoList);
 		logger.info("Sending save request to server...");
 		SavePcaPersonListResponseDto response = ServiceClient.savePcaPersonList(savePersonRequest);
-		logger.info("Save request is finished with server response. Response:" + response + " total elapsed time to save data to cloud :" + (System.currentTimeMillis() - start)
-				+ " ms.");
+		logger.info("Save request is finished with server response. Response:" + response + " total elapsed time to save data to cloud :" + (System.currentTimeMillis() - start) + " ms.");
 		if (response == null || !ResponseStatus.OK.equals(response.getResponseStatus())) {
 			String errorMsg = "Server is not responding!";
 			if (response != null)

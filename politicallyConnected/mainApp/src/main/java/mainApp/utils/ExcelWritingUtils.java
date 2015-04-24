@@ -140,23 +140,26 @@ public class ExcelWritingUtils {
 			Row row = sheet.createRow((short) rowCount);
 			int rowCellCount = 0;
 			Cell cell = row.createCell(rowCellCount);
+			if (manager.getName() != null && manager.getName().length() > 30000)
+				continue;
 			cell.setCellValue(createHelper.createRichTextString(manager.getName()));
 			rowCellCount++;
 			Set<ManagementJob> mJobs = manager.getJobs();
 			StringBuilder sb = new StringBuilder();
 			for (ManagementJob mJob : mJobs) {
-				sb.append(mJob.getName() + " - " + mJob.getYear() + System.lineSeparator());
+				sb.append(mJob.getName() + " - " + mJob.getYear() + ",");
 			}
 			Cell jobCell = row.createCell(rowCellCount);
 			jobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
-			rowCount++;
 			Set<PoliticalJob> pJobs = manager.getpJobs();
+			rowCellCount++;
 			sb = new StringBuilder();
 			for (PoliticalJob politicalJob : pJobs) {
-				sb.append(politicalJob.getName() + " - " + politicalJob.getYear() + System.lineSeparator());
+				sb.append(politicalJob.getName() + " - " + politicalJob.getYear() + ",");
 			}
 			Cell pJobCell = row.createCell(rowCellCount);
 			pJobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
+			rowCount++;
 		}
 		// Write the output to a file
 		FileOutputStream fileOut;
