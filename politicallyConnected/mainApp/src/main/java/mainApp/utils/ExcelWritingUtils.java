@@ -159,6 +159,7 @@ public class ExcelWritingUtils {
 			}
 			Cell pJobCell = row.createCell(rowCellCount);
 			pJobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
+			rowCount++;
 		}
 		// Write the output to a file
 		FileOutputStream fileOut;
