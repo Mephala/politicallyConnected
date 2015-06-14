@@ -173,4 +173,14 @@ public class MainAppUtils {
 		}
 		return list;
 	}
+
+	public static <E> Set<E> convertListToSet(List<E> list) {
+		if (list == null || list.size() == 0)
+			return Collections.emptySet();
+		Set<E> set = new HashSet<E>();
+		for (E e : list) {
+			set.add(e);
+		}
+		return set;
+	}
 }
