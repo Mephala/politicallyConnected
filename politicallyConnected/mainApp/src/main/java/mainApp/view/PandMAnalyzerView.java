@@ -10,7 +10,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import mainApp.manager.CloudManager;
 import mainApp.manager.CloudToExcelManager;
+import mainApp.utils.HtmlTableCreaterFromMergedManagers;
 
 public class PandMAnalyzerView extends JPanel {
 
@@ -38,7 +40,7 @@ public class PandMAnalyzerView extends JPanel {
 		lblNewLabel_1.setBounds(12, 42, 457, 39);
 		add(lblNewLabel_1);
 
-		JLabel lblNewLabel_2 = new JLabel("Server merges data in every 30 mins.");
+		JLabel lblNewLabel_2 = new JLabel("Server merges data in every 4 hours.");
 		lblNewLabel_2.setBounds(12, 94, 427, 16);
 		add(lblNewLabel_2);
 
@@ -51,8 +53,20 @@ public class PandMAnalyzerView extends JPanel {
 				instance.setCursor(Cursor.getDefaultCursor());
 			}
 		});
-		btnNewButton.setBounds(105, 443, 295, 25);
+		btnNewButton.setBounds(12, 445, 220, 25);
 		add(btnNewButton);
+
+		JButton btnNewButton_1 = new JButton("Merge Data as html table");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CloudManager cm = CloudManager.getInstance();
+				HtmlTableCreaterFromMergedManagers htcfm = new HtmlTableCreaterFromMergedManagers(cm.getAllMergedPeopleAsSet());
+				ReadMergeDataTable rmdt = new ReadMergeDataTable(htcfm.getMergeDataAsHtmlTable());
+				rmdt.setVisible(true);
+			}
+		});
+		btnNewButton_1.setBounds(264, 446, 226, 23);
+		add(btnNewButton_1);
 
 	}
 }

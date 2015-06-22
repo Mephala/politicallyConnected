@@ -62,4 +62,21 @@ public class Manager {
 		this.pJobs = pJobs;
 	}
 
+	public String getHtmlTableRow() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<tr>");
+		sb.append("<td>" + getName() + "</td>");
+		StringBuilder mJobBuilder = new StringBuilder();
+		for (ManagementJob managementJob : jobs) {
+			mJobBuilder.append(managementJob.getName() + "-" + managementJob.getYear());
+		}
+		sb.append("<td>" + mJobBuilder.toString() + "</td>");
+		StringBuilder pJobBuilder = new StringBuilder();
+		for (PoliticalJob pJob : this.pJobs) {
+			pJobBuilder.append(pJob.getName() + "-" + pJob.getYear());
+		}
+		sb.append("<td>" + pJobBuilder.toString() + "</td>");
+		sb.append("</tr>");
+		return sb.toString();
+	}
 }

@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import mainApp.model.ManagementJob;
 import mainApp.model.Manager;
 import mainApp.model.PoliticalJob;
+import mainApp.utils.MainAppUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +35,7 @@ public class CloudManager {
 	private CloudManager() {
 		logger.info("Initializing cloud manager...");
 		// ServiceClient.initialize("http://192.168.2.100:8081/serviceProvider/");
+		ServiceClient.initialize("http://localhost:8082/");
 	}
 
 	public static synchronized CloudManager getInstance() {
@@ -158,5 +160,15 @@ public class CloudManager {
 			}
 		}
 		return mJobs;
+	}
+
+	public Set<Manager> getAllMergedPeopleAsSet() {
+		long start = System.currentTimeMillis();
+		GetAllPcaDataRequestDto request = RequestDtoFactory.createMergedPcaDataRequestDto(RequestApplication.PCA);
+		GetAllPcaDataResponseDto response = ServiceClient.getAllPcaDataDto(request);
+		logger.info("All merged cloud data has been received after " + (System.currentTimeMillis() - start) + " ,ms.");
+		List<PcaPersonDto> pcaPersonDtoList = response.getAllPersonDtoList();
+		Set<Manager> managerList = MainAppUtils.createManagerList(pcaPersonDtoList);
+		return managerList;
 	}
 }

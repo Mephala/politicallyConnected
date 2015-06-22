@@ -26,6 +26,7 @@ public class CloudToExcelManager {
 	private final String companyFirstSheetName = companyFirstExcelName;
 	private final String personFirstExcelName = "PersonFirst(ALLDATA).xls";
 	private final String personFirstSheetName = personFirstExcelName;
+	private final CloudManager cloudManager = CloudManager.getInstance();
 
 	private CloudToExcelManager() {
 		logger.info("Cloud to excel manager has been initialized.");
@@ -51,13 +52,12 @@ public class CloudToExcelManager {
 
 	public void writeExcelFileFromCloudForMergedData() {
 		logger.info("Creating excel file for merged data...");
-		long start = System.currentTimeMillis();
-		GetAllPcaDataRequestDto request = RequestDtoFactory.createMergedPcaDataRequestDto(RequestApplication.PCA);
-		GetAllPcaDataResponseDto response = ServiceClient.getAllPcaDataDto(request);
-		logger.info("All merged cloud data has been received after " + (System.currentTimeMillis() - start) + " ,ms.");
-		List<PcaPersonDto> pcaPersonDtoList = response.getAllPersonDtoList();
-		Set<Manager> managerList = MainAppUtils.createManagerList(pcaPersonDtoList);
+		Set<Manager> managerList = getAllMergedPeopleAsSet();
 		ExcelWritingUtils.createMergedDataExcel(managerList);
 
+	}
+
+	private Set<Manager> getAllMergedPeopleAsSet() {
+		return cloudManager.getAllMergedPeopleAsSet();
 	}
 }

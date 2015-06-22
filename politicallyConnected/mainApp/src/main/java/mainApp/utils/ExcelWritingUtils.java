@@ -47,12 +47,14 @@ public class ExcelWritingUtils {
 			logger.info("Cell name has been written according to manager for person first excel data. Manager:" + manager.getName());
 			rowCellCount++;
 			Set<ManagementJob> managementJobs = manager.getJobs();
-			for (ManagementJob managementJob : managementJobs) {
-				Cell jobCell = row.createCell(rowCellCount);
-				logger.info("Job cell has been initialized for job:" + managementJob.getName() + ", for person first excel data. Manager:" + manager.getName());
-				jobCell.setCellValue(createHelper.createRichTextString(managementJob.getName()));
-				logger.info("Job cell has been written for job:" + managementJob.getName() + ", for person first excel data. Manager:" + manager.getName());
-				rowCellCount++;
+			if (managementJobs != null) {
+				for (ManagementJob managementJob : managementJobs) {
+					Cell jobCell = row.createCell(rowCellCount);
+					logger.info("Job cell has been initialized for job:" + managementJob.getName() + ", for person first excel data. Manager:" + manager.getName());
+					jobCell.setCellValue(createHelper.createRichTextString(managementJob.getName()));
+					logger.info("Job cell has been written for job:" + managementJob.getName() + ", for person first excel data. Manager:" + manager.getName());
+					rowCellCount++;
+				}
 			}
 			rowCount++;
 			logger.info("Manager row has been created for person first excel data. Manager:" + manager.getName());
@@ -115,14 +117,16 @@ public class ExcelWritingUtils {
 		Map<ManagementJob, Set<Manager>> jobToManagerMap = new HashMap<ManagementJob, Set<Manager>>();
 		for (Manager manager : managerSet) {
 			Set<ManagementJob> managerJobs = manager.getJobs();
-			for (ManagementJob managementJob : managerJobs) {
-				if (jobToManagerMap.containsKey(managementJob)) {
-					Set<Manager> managerSetToJob = jobToManagerMap.get(managementJob);
-					managerSetToJob.add(manager);
-				} else {
-					Set<Manager> managerSetToJob = new HashSet<Manager>();
-					managerSetToJob.add(manager);
-					jobToManagerMap.put(managementJob, managerSetToJob);
+			if (managerJobs != null) {
+				for (ManagementJob managementJob : managerJobs) {
+					if (jobToManagerMap.containsKey(managementJob)) {
+						Set<Manager> managerSetToJob = jobToManagerMap.get(managementJob);
+						managerSetToJob.add(manager);
+					} else {
+						Set<Manager> managerSetToJob = new HashSet<Manager>();
+						managerSetToJob.add(manager);
+						jobToManagerMap.put(managementJob, managerSetToJob);
+					}
 				}
 			}
 		}
@@ -137,11 +141,18 @@ public class ExcelWritingUtils {
 		Sheet sheet = wb.createSheet("MergedExcel");
 		int rowCount = 0;
 		for (Manager manager : managerList) {
+			if (manager.getName() == null || manager.getName().length() == 0)
+				continue;
+			if (manager.getName() != null && manager.getName().length() > 30000)
+				continue;
+			if (0 == manager.getName().indexOf("-")) {
+				manager.setName(manager.getName().substring(1));
+			}
+			if (rowCount == 614)
+				System.err.println("makaharrak");
 			Row row = sheet.createRow((short) rowCount);
 			int rowCellCount = 0;
 			Cell cell = row.createCell(rowCellCount);
-			if (manager.getName() != null && manager.getName().length() > 30000)
-				continue;
 			cell.setCellValue(createHelper.createRichTextString(manager.getName()));
 			rowCellCount++;
 			Set<ManagementJob> mJobs = manager.getJobs();
@@ -160,6 +171,8 @@ public class ExcelWritingUtils {
 			Cell pJobCell = row.createCell(rowCellCount);
 			pJobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
 			rowCount++;
+			if (rowCount == 614)
+				System.err.println("makaharrak");
 		}
 		// Write the output to a file
 		FileOutputStream fileOut;
