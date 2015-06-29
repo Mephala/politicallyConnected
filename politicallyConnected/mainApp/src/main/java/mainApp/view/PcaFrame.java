@@ -89,7 +89,7 @@ public class PcaFrame extends JFrame {
 		tabPane.add("Arama", searchView);
 		PandMAnalyzerView pAndManalyzerView = PandMAnalyzerView.getInstance();
 		tabPane.add("Merging", pAndManalyzerView);
-		ReadFrinExcelPane readFromExcelPane = ReadFrinExcelPane.getInstance();
+		ReadFromExcelPane readFromExcelPane = ReadFromExcelPane.getInstance();
 		tabPane.add("Excelden Okuma", readFromExcelPane);
 		add(tabPane);
 	}

@@ -15,7 +15,7 @@
 		      <configuration>
 		        <archive>
 		          <manifest>
-		            <mainClass>mainApp.view.HelloWorldSwing</mainClass>
+		            <mainClass>mainApp.view.PcaFrame</mainClass>
 		          </manifest>
 		        </archive>
 		        <descriptorRefs>

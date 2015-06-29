@@ -17,23 +17,27 @@ import mainApp.manager.CloudManager;
 import mainApp.manager.ReadFromExcel;
 import mainApp.model.Manager;
 
-public class ReadFrinExcelPane extends JPanel {
+public class ReadFromExcelPane extends JPanel {
 
-	private static ReadFrinExcelPane instance;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static ReadFromExcelPane instance;
 	private final JFileChooser fileChooser;
 	private final CloudManager cloudManager = CloudManager.getInstance();
 	private AtomicBoolean showXLSNotification = new AtomicBoolean(false);
 
-	public static synchronized ReadFrinExcelPane getInstance() {
+	public static synchronized ReadFromExcelPane getInstance() {
 		if (instance == null)
-			instance = new ReadFrinExcelPane();
+			instance = new ReadFromExcelPane();
 		return instance;
 	}
 
 	/**
 	 * Create the panel.
 	 */
-	private ReadFrinExcelPane() {
+	private ReadFromExcelPane() {
 		fileChooser = new JFileChooser();
 		setLayout(null);
 
@@ -45,36 +49,7 @@ public class ReadFrinExcelPane extends JPanel {
 		JButton btnNewButton = new JButton("Read Milletvekili!");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Boolean success = null;
-				try {
-					File chosenFile = getChosenFile();
-					if (chosenFile != null) {
-						String absolutePath = chosenFile.getAbsolutePath();
-						String directory = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator) + 1);
-						File directoryAsFile = new File(directory);
-						if (directoryAsFile.exists() && directoryAsFile.isDirectory()) {
-							String documentName = absolutePath.substring(absolutePath.lastIndexOf(File.separator) + 1);
-							ReadFromExcel readFromExcel = new ReadFromExcel(directory);
-							try {
-								readFromExcel.readForPolitical(documentName);
-							} catch (Exception exc) {
-								JOptionPane.showMessageDialog(null, "Excelden okuma hatasi. Detayli hata:" + exc.getMessage(), "Excelden Okunamadi", JOptionPane.ERROR_MESSAGE);
-								success = false;
-							}
-							if (!Boolean.FALSE.equals(success)) {
-								Set<Manager> readManagers = readFromExcel.getReadPoliticians(documentName);
-								cloudManager.saveToCloud(readManagers);
-								success = true;
-							}
-						}
-					}
-				} finally {
-					if (Boolean.TRUE.equals(success))
-						JOptionPane.showMessageDialog(null, "Okuma işlemi başarılı, okunan veriler server a gönderildi.", "YAPTIM!", JOptionPane.INFORMATION_MESSAGE);
-					else if (success == null)
-						JOptionPane.showMessageDialog(null, "Excelden okuma hatasi. Bilinmeyen, esrarengiz bir hata. Gokhan Ozgozen'e sorun, gokhan.ozgozen@gmail.com", "Excelden Okunamadi",
-								JOptionPane.ERROR_MESSAGE);
-				}
+				readFromPoliticalExcel();
 			}
 		});
 		btnNewButton.setBounds(139, 87, 181, 23);
@@ -129,5 +104,38 @@ public class ReadFrinExcelPane extends JPanel {
 			return fileChooser.getSelectedFile();
 		}
 		return null;
+	}
+
+	private void readFromPoliticalExcel() {
+		Boolean success = null;
+		try {
+			File chosenFile = getChosenFile();
+			if (chosenFile != null) {
+				String absolutePath = chosenFile.getAbsolutePath();
+				String directory = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator) + 1);
+				File directoryAsFile = new File(directory);
+				if (directoryAsFile.exists() && directoryAsFile.isDirectory()) {
+					String documentName = absolutePath.substring(absolutePath.lastIndexOf(File.separator) + 1);
+					ReadFromExcel readFromExcel = new ReadFromExcel(directory);
+					try {
+						readFromExcel.readForPolitical(documentName);
+					} catch (Exception exc) {
+						JOptionPane.showMessageDialog(null, "Excelden okuma hatasi. Detayli hata:" + exc.getMessage(), "Excelden Okunamadi", JOptionPane.ERROR_MESSAGE);
+						success = false;
+					}
+					if (!Boolean.FALSE.equals(success)) {
+						Set<Manager> readManagers = readFromExcel.getReadPoliticians(documentName);
+						cloudManager.saveToCloud(readManagers);
+						success = true;
+					}
+				}
+			}
+		} finally {
+			if (Boolean.TRUE.equals(success))
+				JOptionPane.showMessageDialog(null, "Okuma işlemi başarılı, okunan veriler server a gönderildi.", "YAPTIM!", JOptionPane.INFORMATION_MESSAGE);
+			else if (success == null)
+				JOptionPane.showMessageDialog(null, "Excelden okuma hatasi. Bilinmeyen, esrarengiz bir hata. Gokhan Ozgozen'e sorun, gokhan.ozgozen@gmail.com", "Excelden Okunamadi",
+						JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }
