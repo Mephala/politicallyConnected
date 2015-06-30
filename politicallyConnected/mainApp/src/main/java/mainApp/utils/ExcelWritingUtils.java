@@ -161,7 +161,10 @@ public class ExcelWritingUtils {
 				sb.append(mJob.getName() + " - " + mJob.getYear() + ",");
 			}
 			Cell jobCell = row.createCell(rowCellCount);
-			jobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
+			String cellValue = sb.toString();
+			if (cellValue != null && cellValue.length() > 20000)
+				cellValue = cellValue.substring(0, 20000);
+			jobCell.setCellValue(createHelper.createRichTextString(cellValue));
 			Set<PoliticalJob> pJobs = manager.getpJobs();
 			rowCellCount++;
 			sb = new StringBuilder();
