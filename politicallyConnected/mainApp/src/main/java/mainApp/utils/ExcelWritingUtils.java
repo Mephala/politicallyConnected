@@ -133,7 +133,7 @@ public class ExcelWritingUtils {
 		return jobToManagerMap;
 	}
 
-	public static void createMergedDataExcel(Set<Manager> managerList) {
+	public static void writeMergedDataToExcel(Set<Manager> managerList, String documentName) {
 		logger.info("Writing merged manager set to excel.");
 		Workbook wb = new HSSFWorkbook();
 		// Workbook wb = new XSSFWorkbook();
@@ -148,8 +148,6 @@ public class ExcelWritingUtils {
 			if (0 == manager.getName().indexOf("-")) {
 				manager.setName(manager.getName().substring(1));
 			}
-			if (rowCount == 614)
-				System.err.println("makaharrak");
 			Row row = sheet.createRow((short) rowCount);
 			int rowCellCount = 0;
 			Cell cell = row.createCell(rowCellCount);
@@ -174,15 +172,14 @@ public class ExcelWritingUtils {
 			Cell pJobCell = row.createCell(rowCellCount);
 			pJobCell.setCellValue(createHelper.createRichTextString(sb.toString()));
 			rowCount++;
-			if (rowCount == 614)
-				System.err.println("makaharrak");
 		}
 		// Write the output to a file
 		FileOutputStream fileOut;
 		try {
-			fileOut = new FileOutputStream("AllDataMerged.xls");
+			fileOut = new FileOutputStream(documentName);
 			wb.write(fileOut);
 			fileOut.close();
+			wb.close();
 		} catch (FileNotFoundException e) {
 			System.err.println("Error during excel writing. Err:" + e.getMessage());
 		} catch (IOException e) {

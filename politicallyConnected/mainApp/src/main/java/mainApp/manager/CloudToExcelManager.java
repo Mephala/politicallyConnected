@@ -1,5 +1,6 @@
 package mainApp.manager;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import service.provider.client.executor.ServiceClient;
+import service.provider.common.CommonUtils;
 import service.provider.common.core.RequestApplication;
 import service.provider.common.dto.PcaPersonDto;
 import service.provider.common.request.GetAllPcaDataRequestDto;
@@ -53,7 +55,34 @@ public class CloudToExcelManager {
 	public void writeExcelFileFromCloudForMergedData() {
 		logger.info("Creating excel file for merged data...");
 		Set<Manager> managerList = getAllMergedPeopleAsSet();
-		ExcelWritingUtils.createMergedDataExcel(managerList);
+		Set<Manager> nonCombinedManagers = new HashSet<Manager>();
+		Set<Manager> combinedManagers = new HashSet<Manager>();
+		divideManagerListToCombinedAndNonCombined(managerList, nonCombinedManagers, combinedManagers);
+		ExcelWritingUtils.writeMergedDataToExcel(nonCombinedManagers, "Direct-Relations.xls");
+		ExcelWritingUtils.writeMergedDataToExcel(combinedManagers, "InDirect-Relations.xls");
+		ExcelWritingUtils.writeMergedDataToExcel(managerList, "AllMergeList.xls");
+
+	}
+
+	/**
+	 * Ismi uzun olan ve merged olma ihtimali yuksek olan elemanlari digerlerinden ayird eden metod. Side effectli metod, verilen listleri modifiye ediyor, beware.
+	 * 
+	 * @param combinedManagers2
+	 */
+	private void divideManagerListToCombinedAndNonCombined(Set<Manager> managerList, Set<Manager> nonCombinedManagers, Set<Manager> combinedManagers) {
+		if (managerList == null || nonCombinedManagers == null || combinedManagers == null)
+			return;
+		for (Manager manager : managerList) {
+			if (manager == null)
+				continue;
+			String mName = manager.getName();
+			if (mName == null)
+				continue;
+			if (CommonUtils.wordCount(mName) < 4)
+				nonCombinedManagers.add(manager);
+			else
+				combinedManagers.add(manager);
+		}
 
 	}
 
